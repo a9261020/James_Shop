@@ -6,6 +6,9 @@ import Signup from "./views/Signup";
 
 // 後端
 import Dashbaord from "./views/Dashboard";
+import CouponsManage from "./views/Admin/CouponsManage";
+import OrdersManage from "./views/Admin/OrdersManage";
+import ProductsManage from "./views/Admin/ProductsManage";
 
 // 前端
 import Layout from "./views/Layout";
@@ -21,7 +24,21 @@ export default new VueRouter({
       // 後端
       path: "/dashboard",
       name: "Dashboard",
-      component: Dashbaord
+      component: Dashbaord,
+      children: [
+        {
+          path: "couponsmanage",
+          component: CouponsManage
+        },
+        {
+          path: "ordersmanage",
+          component: OrdersManage
+        },
+        {
+          path: "productsmanage",
+          component: ProductsManage
+        }
+      ]
     },
     {
       // 前端

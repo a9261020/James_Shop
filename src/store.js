@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import productsModules from "./store/products";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -30,5 +32,7 @@ export default new Vuex.Store({
       return state.isLogin;
     }
   },
-  modules: {}
+  modules: {
+    productsModules
+  }
 });

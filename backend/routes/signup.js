@@ -2,7 +2,7 @@ const express = require("express");
 const signupRoute = express.Router();
 const bcrypt = require("bcrypt");
 
-const UserModel = require("../model/user");
+const UserModel = require("../model/users");
 
 signupRoute.route("/").post((req, res) => {
   const newUser = new UserModel({
