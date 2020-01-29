@@ -26,9 +26,6 @@ import AlertMessage from "@/components/AlertMessage";
 import { mapGetters } from "vuex";
 
 export default {
-  data() {
-    return {};
-  },
   components: {
     Navbar,
     Siderbar,

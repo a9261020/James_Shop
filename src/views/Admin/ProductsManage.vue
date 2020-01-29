@@ -233,7 +233,7 @@
     </div>
 
     <!-- delProductModal -->
-    <!-- <div
+    <div
       class="modal fade"
       id="delProductModal"
       tabindex="-1"
@@ -277,7 +277,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -314,17 +314,54 @@ export default {
       $("#productModal").modal("show");
     },
     updateProduct() {
-      axios
-        .post("http://localhost:5000/api/getProducts", this.tempProduct)
-        .then(res => {
-          if (res.data.success) {
-            $("#productModal").modal("hide");
-          }
-        });
+      if (!this.isNew) {
+        axios
+          .post(
+            `http://localhost:5000/api/getProducts/${this.tempProduct._id}`,
+            this.tempProduct
+          )
+          .then(res => {
+            if (res.data.success) {
+              $("#productModal").modal("hide");
+              this.getProducts();
+              this.$store.dispatch("alertMessageModules/updateMessage", {
+                message: res.data.message,
+                status: "success"
+              });
+            }
+          });
+      } else {
+        axios
+          .post("http://localhost:5000/api/getProducts", this.tempProduct)
+          .then(res => {
+            if (res.data.success) {
+              $("#productModal").modal("hide");
+              this.getProducts();
+              this.$store.dispatch("alertMessageModules/updateMessage", {
+                message: res.data.message,
+                status: "success"
+              });
+            }
+          });
+      }
     },
     openDelProductModal(item) {
       this.tempProduct = Object.assign({}, item);
       $("#delProductModal").modal("show");
+    },
+    delProduct() {
+      axios
+        .delete(`http://localhost:5000/api/getProducts/${this.tempProduct._id}`)
+        .then(res => {
+          if (res.data.success) {
+            $("#delProductModal").modal("hide");
+            this.getProducts();
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "danger"
+            });
+          }
+        });
     },
     uploadFile() {}
   },

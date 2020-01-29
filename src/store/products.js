@@ -1,5 +1,3 @@
-import Vue from "vue";
-Vue;
 import axios from "axios";
 
 export default {

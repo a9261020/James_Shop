@@ -1,7 +1,7 @@
 <template>
   <div class="mb-4">
     <swiper :options="swiperOption">
-      <swiper-slide v-for="item in 16" :key="item.id">
+      <swiper-slide v-for="item in cardsProducts" :key="item._id">
         <ul
           class="sider"
           :style="{ backgroundImage: `url(${item.imageUrl})` }"
@@ -9,9 +9,9 @@
         >
           <li class="sider-tag">
             <div class="sider-triangle"></div>
-            <span class="sider-title">{{ item }}</span>
+            <span class="sider-title">{{ item.category }}</span>
           </li>
-          <li class="sider-rect">{{ item }}</li>
+          <li class="sider-rect">{{ item.title }}</li>
         </ul>
       </swiper-slide>
     </swiper>
@@ -21,6 +21,7 @@
 <script>
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -48,6 +49,15 @@ export default {
   components: {
     swiper,
     swiperSlide
+  },
+  computed: {
+    cardsProducts() {
+      return this.products.filter(item => item.is_enabled === 1).slice(0, 12);
+    },
+    ...mapGetters("productsModules", ["products"])
+  },
+  created() {
+    this.$store.dispatch("productsModules/getProducts");
   }
 };
 </script>

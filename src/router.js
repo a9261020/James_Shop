@@ -13,6 +13,7 @@ import ProductsManage from "./views/Admin/ProductsManage";
 // 前端
 import Layout from "./views/Layout";
 import Home from "./views/Front/Home";
+import ProductsList from "./views/Front/ProductsList";
 
 Vue.use(VueRouter);
 
@@ -49,6 +50,11 @@ export default new VueRouter({
           path: "/",
           name: "Home",
           component: Home
+        },
+        {
+          path: "productslist",
+          name: "ProductsList",
+          component: ProductsList
         }
       ]
     }

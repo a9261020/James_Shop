@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import productsModules from "./store/products";
+import alertMessageModules from "./store/alertMessage";
 
 Vue.use(Vuex);
 
@@ -33,6 +34,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    productsModules
+    productsModules,
+    alertMessageModules
   }
 });

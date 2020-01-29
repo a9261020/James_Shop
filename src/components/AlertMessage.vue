@@ -3,7 +3,7 @@
     <div
       class="alert alert-dismissible"
       :class="'alert-' + item.status"
-      v-for="(item, index) in 1"
+      v-for="(item, index) in message"
       :key="index"
     >
       {{ item.message }}
@@ -20,5 +20,27 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+  computed: {
+    ...mapGetters("alertMessageModules", ["message"])
+  },
+  methods: {
+    ...mapActions("alertMessageModules", [
+      "removeMessage",
+      "removeMessageWithTiming"
+    ])
+  }
+};
 </script>
+
+<style scope>
+.message-alert {
+  max-width: 55%;
+  position: fixed;
+  top: 56px;
+  right: 20px;
+  z-index: 1100;
+}
+</style>
