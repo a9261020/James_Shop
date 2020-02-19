@@ -7,7 +7,9 @@
         </li>
         <li class="breadcrumb-item active">產品列表</li>
         <li class="breadcrumb-item active">{{ select }}</li>
-        <li class="breadcrumb-item active" v-if="filterText">搜尋 {{ filterText }}</li>
+        <li class="breadcrumb-item active" v-if="filterText">
+          搜尋 {{ filterText }}
+        </li>
       </ol>
     </nav>
 
@@ -19,7 +21,7 @@
               class="list-group-item list-group-item-action h6"
               v-for="(category, index) in categories"
               :key="index"
-              :class="{'active': select == category.title}"
+              :class="{ active: select == category.title }"
               @click="getCategory(category.title)"
             >
               <i :class="category.icon"></i>
@@ -27,7 +29,12 @@
             </li>
           </ul>
           <form class="input-group mb-3" @submit.prevent="search">
-            <input type="search" class="form-control" placeholder="search" v-model="searchText" />
+            <input
+              type="search"
+              class="form-control"
+              placeholder="search"
+              v-model="searchText"
+            />
             <div class="input-group-append">
               <button class="input-group-text bg-light">
                 <i class="fas fa-search"></i>
@@ -38,39 +45,65 @@
       </div>
 
       <div class="col-lg-10 col-md-9">
-        <div
-          class="mb-2 text-left text-muted"
-          v-if="filterText"
-        >we found {{ filterProducts.length }} result for "{{ filterText }}"</div>
+        <div class="mb-2 text-left text-muted" v-if="filterText">
+          we found {{ filterProducts.length }} result for "{{ filterText }}"
+        </div>
 
         <div class="card-columns">
-          <div class="card text-primary product-card" v-for="product in 8" :key="product">
+          <div
+            class="card text-primary product-card"
+            v-for="product in filterProducts"
+            :key="product._id"
+          >
             <div
-              :style="{background: `url(${product}) center center no-repeat`,
-            backgroundSize: 'cover', height:'200px'}"
+              :style="{
+                background: `url(${product.imageUrl}) center center no-repeat`,
+                backgroundSize: 'cover',
+                height: '200px'
+              }"
             ></div>
             <div class="favorite">
-              <a class="text-danger" v-if="product" @click.prevent="removeFavorite(product, false)">
+              <a
+                class="text-danger"
+                v-if="product.is_favorite"
+                @click.prevent="removeFavorite(product, false)"
+              >
                 <i class="fas fa-heart fa-lg"></i>
               </a>
-              <a class="text-danger" v-else @click.prevent="addFavorite(product)">
+              <a
+                class="text-danger"
+                v-else
+                @click.prevent="addFavorite(product)"
+              >
                 <i class="far fa-heart fa-lg"></i>
               </a>
             </div>
             <div class="card-body py-2">
-              <h5 class="card-title mb-0">{{ product }}</h5>
+              <h5 class="card-title mb-0">{{ product.title }}</h5>
               <div class="d-flex align-items-baseline">
-                <p class="card-text text-secondary mb-0" v-if="product">
-                  <del>{{ product }}</del>
+                <p
+                  class="card-text text-secondary mb-0"
+                  v-if="product.origin_price !== product.price"
+                >
+                  <del>{{ product.origin_price }}</del>
                 </p>
-                <p class="card-text ml-auto h5" :class="{'text-danger': product}">NT {{ product }}</p>
+                <p
+                  class="card-text ml-auto h5"
+                  :class="{
+                    'text-danger': product.origin_price !== product.price
+                  }"
+                >
+                  NT {{ product.price }}
+                </p>
               </div>
             </div>
             <div class="product-more">
-              <router-link :to="`/productslist/${product}`">查看更多</router-link>
-              <a href="#" @click.prevent="addToCart(product)">加到購物車</a>
+              <router-link :to="`/productslist/${product._id}`"
+                >查看更多</router-link
+              >
+              <a href="#" @click.prevent="addToCart(product._id)">加到購物車</a>
             </div>
-            <div class="product-soldout" v-if="!product">
+            <div class="product-soldout" v-if="!product.is_enabled">
               <button class="btn btn-danger border" disabled>Sold Out</button>
             </div>
           </div>
@@ -81,6 +114,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -98,6 +133,11 @@ export default {
     };
   },
   methods: {
+    getParams() {
+      if (this.$route.query.category) {
+        this.select = this.$route.query.category;
+      }
+    },
     getCategory(category) {
       this.select = category;
       if (this.filterText) {
@@ -106,7 +146,53 @@ export default {
       if (this.$route.query.category) {
         this.$router.push("/productslist");
       }
+    },
+    getProducts() {
+      this.$store.dispatch("productsModules/getProducts");
+    },
+    search() {
+      this.filterText = this.searchText;
+      this.searchText = "";
+    },
+    addFavorite(product) {
+      this.$store.dispatch("favoritesModules/addToFavorite", product);
+    },
+    removeFavorite(productItem, delall) {
+      this.$store.dispatch("favoritesModules/removeFavorite", {
+        favoriteItem: productItem,
+        delall
+      });
+    },
+    addToCart(productId) {
+      // TODO
+      const userId = sessionStorage.getItem("userId");
+      this.$store.dispatch("cartsModules/addToCart", {
+        userId: userId,
+        _id: productId,
+        qty: 1
+      });
     }
+  },
+  computed: {
+    filterProducts() {
+      const vm = this;
+      if (this.filterText) {
+        // eslint 不允許在computed裡面改變this的資料，所以用vm來解決
+        vm.select = "全部商品";
+        return this.products.filter(
+          item => item.title.indexOf(this.filterText) !== -1
+        );
+      }
+      if (this.select !== "全部商品") {
+        return this.products.filter(item => item.category === this.select);
+      }
+      return this.products;
+    },
+    ...mapGetters("productsModules", ["products"])
+  },
+  created() {
+    this.getProducts();
+    this.getParams();
   }
 };
 </script>

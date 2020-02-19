@@ -20,13 +20,17 @@
         placeholder="Password"
         required
       />
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Login</button>
+      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+        Login
+      </button>
       <ul>
         <li>
           <router-link class="text-muted" to="/signup">尚未註冊</router-link>
         </li>
         <li>
-          <router-link class="text-muted" to="/">＜－ 回到 James Shop 購物去</router-link>
+          <router-link class="text-muted" to="/"
+            >＜－ 回到 James Shop 購物去</router-link
+          >
         </li>
       </ul>
     </form>
@@ -50,8 +54,9 @@ export default {
       axios.post("http://localhost:5000/api/login", this.user).then(
         res => {
           if (res.status === 200) {
+            const userId = res.data.userId;
             const token = res.data.token;
-            this.$store.dispatch("login", token);
+            this.$store.dispatch("login", { token, userId });
             this.$router.push("/dashboard");
           }
         },

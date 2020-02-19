@@ -10,6 +10,17 @@ getProductsRoute.route("/").get((req, res) => {
   });
 });
 
+// 獲取單一商品頁面
+getProductsRoute.route("/:_id").get((req, res) => {
+  ProductModel.findOne({ _id: req.params._id }, (err, data) => {
+    if (err) res.send(err);
+    res.status(200).json({
+      data: data,
+      success: true
+    });
+  });
+});
+
 // 新增產品
 getProductsRoute.route("/").post((req, res) => {
   const newProduct = new ProductModel({

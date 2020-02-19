@@ -7,6 +7,7 @@
         class="col-lg-2 col-md-4 col-6"
         v-for="(category, index) in categories"
         :key="index"
+        @click.prevent="categoryBtn(category.title)"
       >
         <i :class="category.icon"></i>
         <ul class="ml-3">
@@ -19,16 +20,14 @@
     <div class="bg-light discount">
       <div class="mr-2">
         <h5>限時 counpon 大放送</h5>
-        <small class="text-secondary"
-          >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis animi
+        <small class="text-secondary">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis animi
           molestias aliquam dignissimos minima fugit officiis labore dolore
           aliquid, vero, soluta est quibusdam. Adipisci voluptas aut unde
-          aliquid numquam vero!</small
-        >
+          aliquid numquam vero!
+        </small>
       </div>
-      <router-link to="/coupongame" class="btn btn-primary"
-        >立即領取</router-link
-      >
+      <router-link to="/coupongame" class="btn btn-primary">立即領取</router-link>
     </div>
 
     <CardSider />
@@ -44,9 +43,7 @@
           <div class="news-border">
             <h3 class="mb-3">Hot Sale</h3>
             <p>Popular Products</p>
-            <router-link to="/productslist" class="btn btn-primary"
-              >Go Shop</router-link
-            >
+            <router-link to="/productslist" class="btn btn-primary">Go Shop</router-link>
           </div>
         </div>
       </div>
@@ -55,9 +52,7 @@
           <div class="news-border">
             <h3 class="mb-3">New Arrival</h3>
             <p>Summer Clothing</p>
-            <router-link to="/productslist" class="btn btn-primary"
-              >Shop Now</router-link
-            >
+            <router-link to="/productslist" class="btn btn-primary">Shop Now</router-link>
           </div>
         </div>
         <div class="mb-4 news-img news-img-2">
@@ -75,9 +70,7 @@
           <input class="form-control" type="email" v-model="email" />
           <span>{{ errors[0] }}</span>
         </ValidationProvider>
-        <button type="button" class="form-control btn btn-primary mt-3">
-          Subscribe Now
-        </button>
+        <button type="button" class="form-control btn btn-primary mt-3">Subscribe Now</button>
       </div>
     </div>
   </div>
@@ -104,12 +97,20 @@ export default {
   components: {
     BannerSider,
     CardSider
+  },
+  methods: {
+    categoryBtn(categoryTitle) {
+      this.$router.push({
+        path: "/productslist",
+        query: { category: categoryTitle }
+      });
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/_custom.scss";
+@import "../../assets/_custom.scss";
 
 // category
 .category {

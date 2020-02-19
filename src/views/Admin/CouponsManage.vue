@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="text-right">
-      <button class="btn btn-primary" @click="openCouponModal(true)">建立新的優惠卷</button>
+      <button class="btn btn-primary" @click="openCouponModal(true)">
+        建立新的優惠卷
+      </button>
     </div>
 
     <div class="table-responsive-xl mt-4">
@@ -29,8 +31,15 @@
                 <button
                   class="btn btn-outline-primary btn-sm"
                   @click="openCouponModal(false, item)"
-                >編輯</button>
-                <button class="btn btn-outline-danger btn-sm" @click="openDelCouponModal(item)">刪除</button>
+                >
+                  編輯
+                </button>
+                <button
+                  class="btn btn-outline-danger btn-sm"
+                  @click="openDelCouponModal(item)"
+                >
+                  刪除
+                </button>
               </div>
             </td>
           </tr>
@@ -51,7 +60,12 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="couponModalLabel">折價卷</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -64,7 +78,7 @@
                 class="form-control"
                 placeholder="請輸入標題"
                 v-model="tempCoupon.title"
-              >
+              />
             </div>
             <div class="form-group">
               <label for="code">優惠碼</label>
@@ -74,7 +88,7 @@
                 class="form-control"
                 placeholder="請輸入優惠碼"
                 v-model="tempCoupon.code"
-              >
+              />
             </div>
             <div class="form-group">
               <label for="due_date">到期日</label>
@@ -84,7 +98,7 @@
                 class="form-control"
                 placeholder="請輸入到期日"
                 v-model="due_date"
-              >
+              />
             </div>
             <div class="form-group">
               <label for="percent">打折百分比</label>
@@ -94,7 +108,7 @@
                 class="form-control"
                 placeholder="請輸入打折百分比"
                 v-model="tempCoupon.percent"
-              >
+              />
             </div>
             <div class="form-group">
               <div class="form-check">
@@ -105,14 +119,24 @@
                   :true-value="1"
                   :false-value="0"
                   v-model="tempCoupon.is_enabled"
+                />
+                <label class="form-check-label" for="is_enabled"
+                  >是否啟用</label
                 >
-                <label class="form-check-label" for="is_enabled">是否啟用</label>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary">更新優惠卷</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-primary" @click="updateCoupon">
+              更新優惠卷
+            </button>
           </div>
         </div>
       </div>
@@ -131,16 +155,31 @@
         <div class="modal-content">
           <div class="modal-header bg-danger text-light">
             <h5 class="modal-title" id="delCouponModalLabel">刪除折價卷</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">是否刪除
-            <strong class="text-danger">{{ tempCoupon.title }}</strong> 折價卷 (刪除後將無法回復)
+          <div class="modal-body">
+            是否刪除
+            <strong class="text-danger">{{ tempCoupon.title }}</strong> 折價卷
+            (刪除後將無法回復)
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-outline-danger">確認刪除</button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-dismiss="modal"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-outline-danger">
+              確認刪除
+            </button>
           </div>
         </div>
       </div>
@@ -149,30 +188,64 @@
 </template>
 
 <script>
+import $ from "jquery";
+import axios from "axios";
+
 export default {
   data() {
     return {
-      coupons: [
-        {
-          title: "優惠卷1",
-          percent: 50,
-          due_date: Date(),
-          is_enabled: true
-        }
-      ],
-      tempCoupon: [
-        {
-          title: "",
-          is_enabled: 0,
-          percent: 100,
-          due_date: 0,
-          code: ""
-        }
-      ],
+      coupons: {},
+      tempCoupon: {
+        title: "",
+        is_enabled: 0,
+        percent: 100,
+        due_date: 0,
+        code: ""
+      },
       due_date: new Date(),
       isNew: false,
       pagination: {}
     };
+  },
+  watch: {
+    due_date() {
+      const timeStamp = Math.floor(new Date(this.due_date) / 1000);
+      this.tempCoupon.due_date = timeStamp;
+    }
+  },
+  methods: {
+    getCoupons() {
+      const url = "http://localhost:5000/api/getCoupons";
+      axios.get(url).then(res => {
+        console.log(res);
+      });
+    },
+    openCouponModal(isNew, item) {
+      this.isNew = isNew;
+      $("#couponModal").modal("show");
+      if (this.isNew) {
+        this.tempCoupon = {};
+        this.due_date = 0;
+      } else {
+        // 複製item
+        this.tempCoupon = Object.assign({}, item);
+        const dateTime = new Date(this.tempCoupon.due_date * 1000)
+          .toISOString()
+          .split("T");
+        [this.date] = dateTime;
+      }
+    },
+    updateCoupon() {
+      if (this.isNew) {
+        const url = "http://localhost:5000/api/getCoupons/addNewCoupon";
+        axios.post(url, { data: this.tempCoupon }).then(res => {
+          console.log(res);
+        });
+      }
+    }
+  },
+  created() {
+    this.getCoupons();
   }
 };
 </script>

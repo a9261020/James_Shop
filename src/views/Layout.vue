@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <AlertMessage />
     <nav class="navbar navbar-expand-lg navbar-light bg-transparent px-0">
       <router-link class="navbar-brand logo" to="/">James's Shop</router-link>
       <button
@@ -46,34 +47,41 @@
           <button type="button" class="btn cart-btn" data-toggle="dropdown">
             <i class="fas fa-shopping-cart fa-lg"></i>
             <!-- 計算現在購物車的長度 -->
-            <span class="badge badge-pill badge-danger">1</span>
+            <span class="badge badge-pill badge-danger">{{ cartsLength }}</span>
           </button>
 
-          <div class="dropdown-menu dropdown-menu-right">
+          <div
+            class="dropdown-menu dropdown-menu-right"
+            :class="{ show: isCartShow }"
+          >
             <div class="p-2 px-sm-3">
               <h5 class="text-center">購物車清單</h5>
               <table class="table mb-2">
                 <tbody>
-                  <tr v-for="cart in 4" :key="cart">
+                  <tr v-for="cart in carts.carts" :key="cart._id">
                     <td class="px-1">
-                      <a href="#" class="text-danger">
-                        <i class="fas fa-trash-alt"></i>1
+                      <a
+                        href="#"
+                        class="text-danger"
+                        @click="removeCartItem(cart.id)"
+                      >
+                        <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
-                    <td class="px-1">{{ cart }}</td>
-                    <td class="px-1">{{ cart }}</td>
-                    <td class="px-1">{{ cart }}</td>
+                    <td class="px-1">{{ cart.product.title }}</td>
+                    <td class="px-1">{{ cart.qty }} {{ cart.product.unit }}</td>
+                    <td class="text-right px-1">${{ cart.total }}</td>
                   </tr>
                   <!-- 判斷購物車是不是空的 -->
-                  <!-- <tr v-if="!cart">
-                    <td class="text-center">購物車是空的
-                      </td>
-                  </tr>-->
+                  <tr v-if="!carts.total">
+                    <td class="text-center">購物車是空的</td>
+                  </tr>
                 </tbody>
               </table>
               <router-link
                 to="/createorder"
                 class="btn bnt-primary d-block mb-2"
+                v-if="carts.total"
               >
                 <i class="fas fa-cart-arrow-down"></i> 結帳去
               </router-link>
@@ -84,7 +92,9 @@
         <div class="btn-group favorite">
           <button type="button" class="btn favorite-btn" data-toggle="dropdown">
             <i class="fas fa-heart fa-lg"></i>
-            <span class="badge badge-pill badge-danger">1</span>
+            <span class="badge badge-pill badge-danger">{{
+              favoritesLength
+            }}</span>
           </button>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="pt-2 px-3">
@@ -93,8 +103,8 @@
                 <tbody>
                   <tr
                     class="favorite-list"
-                    v-for="favorite in 4"
-                    :key="favorite"
+                    v-for="favorite in favorites"
+                    :key="favorite._id"
                   >
                     <td class="py-2" width="30">
                       <a
@@ -107,20 +117,20 @@
                     </td>
                     <td class="py-2">
                       <router-link
-                        :to="`/productslist/${favorite}`"
+                        :to="`/productslist/${favorite._id}`"
                         class="d-block"
-                        >{{ favorite }}</router-link
+                        >{{ favorite.title }}</router-link
                       >
                     </td>
                   </tr>
-                  <tr :class="{ 'd-none': true }">
+                  <tr :class="{ 'd-none': favorites.length }">
                     <td class="text-center">我的最愛是空的</td>
                   </tr>
                 </tbody>
               </table>
               <button
                 class="btn btn-outline-danger btn-block"
-                :class="{ 'd-none': !true }"
+                :class="{ 'd-none': !favorites.length }"
                 data-toggle="modal"
                 data-target="#delFavoriteModal"
               >
@@ -133,6 +143,7 @@
     </nav>
 
     <router-view></router-view>
+
     <!-- footer -->
     <div class="footer">
       <div class="bg-light">
@@ -198,25 +209,100 @@
 
         <div class="copyright">ⓒ 2020 James's Shop by James</div>
       </div>
+
+      <!-- delFavoriteModal -->
+      <div
+        class="modal fade"
+        id="delFavoriteModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="delFavoriteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-light">
+              <h5 class="modal-title" id="delFavoriteModalLabel">
+                刪除 全部我的最愛
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              是否
+              <strong class="text-danger">刪除 全部我的最愛</strong>
+              (刪除後將無法回復)
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-dismiss="modal"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-dismiss="modal"
+                @click.prevent="removeFavorite('', true)"
+              >
+                確認刪除
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+import AlertMessage from "../components/AlertMessage";
+
+export default {
+  components: {
+    AlertMessage
+  },
+  methods: {
+    removeFavorite(productItem, delall) {
+      this.$store.dispatch("favoritesModules/removeFavorite", {
+        favoriteItem: productItem,
+        delall
+      });
+    },
+    removeCartItem(id) {
+      this.$store.dispatch("cartsModules/removeCartItem", id);
+    }
+  },
+  computed: {
+    ...mapGetters("cartsModules", ["carts", "cartsLength", "isCartShow"]),
+    ...mapGetters("favoritesModules", ["favorites", "favoritesLength"])
+  },
+  created() {
+    this.$store.dispatch("cartsModules/getCart");
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/_custom.scss";
 
+// navbar
 .logo {
   background-color: transparent;
   box-shadow: none;
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: bold;
 }
 .dropdown-menu {
-  // 永遠在上層的概念
   z-index: 9999;
 }
 

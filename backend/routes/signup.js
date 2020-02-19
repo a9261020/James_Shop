@@ -13,7 +13,6 @@ signupRoute.route("/").post((req, res) => {
     createDate: req.body.createDate,
     isAdmin: req.body.isAdmin
   });
-  console.log(newUser);
   newUser.save(err => {
     if (err) {
       return res.status(400).json({

@@ -36,7 +36,8 @@ loginRoute.route("/").post((req, res) => {
     return res.status(200).json({
       title: "登入成功",
       success: "true",
-      token: token
+      token: token,
+      userId: user._id
     });
   });
 });

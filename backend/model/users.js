@@ -1,7 +1,7 @@
-let mongoose = require("mongoose");
-let Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-let UserSchema = new Schema({
+const UserSchema = new Schema({
   email: {
     type: String,
     unique: true
@@ -9,7 +9,7 @@ let UserSchema = new Schema({
   gender: String,
   name: String,
   password: String,
-  createDate: String,
+  createDate: Date,
   isAdmin: Boolean
 });
 

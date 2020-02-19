@@ -14,11 +14,15 @@ import ProductsManage from "./views/Admin/ProductsManage";
 import Layout from "./views/Layout";
 import Home from "./views/Front/Home";
 import ProductsList from "./views/Front/ProductsList";
+import Product from "./views/Front/Product";
+import CreateOrder from "./views/Front/CreateOrder";
+import CouponGame from "./views/Front/CouponGame";
 
 Vue.use(VueRouter);
 
 export default new VueRouter({
   routes: [
+    { path: "*", redirect: "/" },
     { path: "/login", component: Login },
     { path: "/signup", component: Signup },
     {
@@ -55,6 +59,21 @@ export default new VueRouter({
           path: "productslist",
           name: "ProductsList",
           component: ProductsList
+        },
+        {
+          path: "productslist/:productId",
+          name: "Product",
+          component: Product
+        },
+        {
+          path: "createorder",
+          name: "CreateOrder",
+          component: CreateOrder
+        },
+        {
+          path: "coupongame",
+          name: "CouponGame",
+          component: CouponGame
         }
       ]
     }
