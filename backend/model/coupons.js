@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const CouponSchema = new Schema({
   title: String,
-  percent: Number,
   code: String,
-  is_enable: Boolean,
   due_date: Date,
+  percent: Number,
+  is_enabled: Number,
   createDate: Date
 });
 

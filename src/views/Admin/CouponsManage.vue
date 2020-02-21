@@ -21,7 +21,9 @@
           <tr v-for="(item, key) in coupons" :key="key">
             <td>{{ item.title }}</td>
             <td class="d-sm-table-cell d-none">{{ item.percent }} %</td>
-            <td class="d-sm-table-cell d-none">{{ item.due_date }}</td>
+            <td class="d-sm-table-cell d-none">
+              {{ item.due_date.substring(0, 10) }}
+            </td>
             <td class="d-sm-table-cell d-none">
               <span class="text-success" v-if="item.is_enabled">啟用</span>
               <span class="text-muted" v-else>未啟用</span>
@@ -177,7 +179,11 @@
             >
               取消
             </button>
-            <button type="button" class="btn btn-outline-danger">
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click="delCoupon"
+            >
               確認刪除
             </button>
           </div>
@@ -199,25 +205,24 @@ export default {
         title: "",
         is_enabled: 0,
         percent: 100,
-        due_date: 0,
+        due_date: "",
         code: ""
       },
-      due_date: new Date(),
+      due_date: "",
       isNew: false,
       pagination: {}
     };
   },
   watch: {
     due_date() {
-      const timeStamp = Math.floor(new Date(this.due_date) / 1000);
-      this.tempCoupon.due_date = timeStamp;
+      this.tempCoupon.due_date = this.due_date;
     }
   },
   methods: {
     getCoupons() {
       const url = "http://localhost:5000/api/getCoupons";
       axios.get(url).then(res => {
-        console.log(res);
+        this.coupons = res.data.data;
       });
     },
     openCouponModal(isNew, item) {
@@ -225,23 +230,59 @@ export default {
       $("#couponModal").modal("show");
       if (this.isNew) {
         this.tempCoupon = {};
-        this.due_date = 0;
+        this.due_date = "";
       } else {
         // 複製item
         this.tempCoupon = Object.assign({}, item);
-        const dateTime = new Date(this.tempCoupon.due_date * 1000)
-          .toISOString()
-          .split("T");
-        [this.date] = dateTime;
+        // 回存的類型不是字串，所以只截前面十個字，才有辦法在更新的時候完整顯示日期
+        this.due_date = this.tempCoupon.due_date.substring(0, 10);
       }
     },
     updateCoupon() {
       if (this.isNew) {
         const url = "http://localhost:5000/api/getCoupons/addNewCoupon";
         axios.post(url, { data: this.tempCoupon }).then(res => {
-          console.log(res);
+          if (res) {
+            this.getCoupons();
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+          }
+        });
+      } else {
+        const url = "http://localhost:5000/api/getCoupons/";
+        axios.post(url, this.tempCoupon).then(res => {
+          if (res) {
+            this.getCoupons();
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+          }
         });
       }
+      $("#couponModal").modal("hide");
+    },
+    openDelCouponModal(item) {
+      this.tempCoupon = Object.assign({}, item);
+      $("#delCouponModal").modal("show");
+    },
+    delCoupon() {
+      axios
+        .delete(
+          `http://localhost:5000/api/getCoupons/deleteCoupon/${this.tempCoupon._id}`
+        )
+        .then(res => {
+          if (res) {
+            $("#delCouponModal").modal("hide");
+            this.getCoupons();
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "danger"
+            });
+          }
+        });
     }
   },
   created() {
