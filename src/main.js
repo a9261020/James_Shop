@@ -6,10 +6,26 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { ValidationProvider, extend } from "vee-validate";
-import { email } from "vee-validate/dist/rules";
+import { email, numeric, max_value, min_value } from "vee-validate/dist/rules";
+
 extend("email", {
   ...email,
   message: "Hey fill in you email"
+});
+
+extend("numeric", {
+  ...numeric,
+  message: "請輸入數字!!!"
+});
+
+extend("max_value", {
+  ...max_value,
+  message: "數字必須小於100"
+});
+
+extend("min_value", {
+  ...min_value,
+  message: "數字必須大於1"
 });
 Vue.component("ValidationProvider", ValidationProvider);
 
