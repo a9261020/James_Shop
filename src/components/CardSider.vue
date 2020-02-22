@@ -5,7 +5,7 @@
         <ul
           class="sider"
           :style="{ backgroundImage: `url(${item.imageUrl})` }"
-          @click.prevent="productBtn(item.id)"
+          @click.prevent="productBtn(item._id)"
         >
           <li class="sider-tag">
             <div class="sider-triangle"></div>
@@ -49,6 +49,11 @@ export default {
   components: {
     swiper,
     swiperSlide
+  },
+  methods: {
+    productBtn(item_id) {
+      this.$router.push({ path: `/productslist/${item_id}` });
+    }
   },
   computed: {
     cardsProducts() {

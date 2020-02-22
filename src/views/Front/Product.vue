@@ -343,6 +343,13 @@ export default {
   computed: {
     ...mapGetters("favoritesModules", ["favorites"])
   },
+  watch: {
+    // 監聽 Layout.vue 我的最愛選單 當路由改變，頁面重新獲取資料
+    $route() {
+      this.productId = this.$route.params.productId;
+      this.getProduct();
+    }
+  },
   created() {
     this.productId = this.$route.params.productId;
     this.getProduct();
