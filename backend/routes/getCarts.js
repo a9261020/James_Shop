@@ -77,10 +77,18 @@ getCartsRoute.route("/").post((req, res) => {
           total: product.price * req.body.qty,
           final_total: product.price * req.body.qty
         };
+
+        // 新增商品後調整購物車總價
         existCart.carts.push(newProduct);
+        existCart.total += newProduct.total;
+        existCart.final_total += newProduct.final_total;
         CartModel.updateOne(
           { userId },
-          { carts: existCart.carts },
+          {
+            carts: existCart.carts,
+            total: existCart.total,
+            final_total: existCart.final_total
+          },
           updateErr => {
             if (updateErr) {
               return res.status(400).json({
@@ -105,28 +113,46 @@ getCartsRoute.route("/").post((req, res) => {
 getCartsRoute.route("/:_id").post((req, res) => {
   const userId = req.body.nowUserId;
   const _id = req.params._id;
-  console.log(`This is cartId ${_id}`);
   CartModel.find({ userId }, (err, data) => {
+    if (err) {
+      return res.status(500).json({
+        message: "伺服器錯誤",
+        err: err
+      });
+    }
     let cart = data[0].carts;
+    let existCart = data[0];
     const idx = cart
       .map(item => {
         return item.id;
       })
       .indexOf(_id);
+
+    // 移除商品後調整購物車的總價
+    existCart.total -= cart[idx].total;
+    existCart.final_total -= cart[idx].final_total;
     cart.splice(idx, 1);
-    CartModel.updateOne({ userId }, { carts: cart }, updateErr => {
-      if (updateErr) {
-        return res.status(400).json({
-          message: "刪除失敗",
-          err: updateErr,
-          success: false
+    CartModel.updateOne(
+      { userId },
+      {
+        carts: cart,
+        total: existCart.total,
+        final_total: existCart.final_total
+      },
+      updateErr => {
+        if (updateErr) {
+          return res.status(400).json({
+            message: "刪除失敗",
+            err: updateErr,
+            success: false
+          });
+        }
+        return res.status(200).json({
+          message: "已刪除",
+          success: true
         });
       }
-      return res.status(200).json({
-        message: "已刪除",
-        success: true
-      });
-    });
+    );
   });
 });
 

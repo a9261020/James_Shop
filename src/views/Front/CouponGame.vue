@@ -105,7 +105,10 @@ export default {
           swal({
             title: `恭喜你一次答對`,
             text: "你的折扣碼是 xxx 將會得到50%折扣",
-            icon: "success"
+            icon: "success",
+            button: "購物去"
+          }).then(() => {
+            this.$router.push("createorder");
           });
           break;
 
