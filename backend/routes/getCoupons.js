@@ -1,6 +1,7 @@
 const express = require("express");
 const getCouponRoute = express.Router();
 const CouponsModel = require("../model/coupons");
+const CartsModel = require("../model/carts");
 
 // 取得優惠券列表
 getCouponRoute.route("/").get((req, res) => {
@@ -89,6 +90,7 @@ getCouponRoute.route("/deleteCoupon/:_id").delete((req, res) => {
 // 套用
 getCouponRoute.route("/useCoupon").post((req, res) => {
   const couponCode = req.body.couponCode;
+  const cartId = req.body.cartId;
   CouponsModel.findOne({ code: couponCode }, (err, coupon) => {
     if (err) {
       return res.status(500).json({
@@ -106,9 +108,27 @@ getCouponRoute.route("/useCoupon").post((req, res) => {
     // 判斷取得優惠券的日期是否過期
     const today = new Date();
     if (coupon.due_date > today) {
-      return res.status(200).json({
-        message: `成功使用優惠券${coupon.code}`,
-        success: true
+      CartsModel.findOne({ _id: cartId }, (err, cart) => {
+        if (err) {
+          return res.status(500).json({
+            message: "伺服器錯誤",
+            err: err
+          });
+        }
+
+        final_total = cart.total *= coupon.percent / 100;
+        CartsModel.updateOne({ _id: cartId }, { final_total }, err => {
+          if (err) {
+            return res.status(500).json({
+              message: "伺服器錯誤",
+              err: err
+            });
+          }
+          return res.status(200).json({
+            message: `成功使用優惠券${coupon.code}`,
+            success: true
+          });
+        });
       });
     } else {
       return res.status(401).json({

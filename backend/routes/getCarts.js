@@ -129,9 +129,14 @@ getCartsRoute.route("/:_id").post((req, res) => {
       .indexOf(_id);
 
     // 移除商品後調整購物車的總價
-    existCart.total -= cart[idx].total;
-    existCart.final_total -= cart[idx].final_total;
     cart.splice(idx, 1);
+    existCart.total = 0;
+    existCart.final_total = 0;
+    cart.forEach(item => {
+      existCart.total += item.total;
+      existCart.final_total += item.final_total;
+    });
+
     CartModel.updateOne(
       { userId },
       {

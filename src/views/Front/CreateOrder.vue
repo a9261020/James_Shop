@@ -54,14 +54,10 @@
               {{ cart.qty }} / {{ cart.product.unit }}
             </td>
             <td class="text-right">
-              <div v-if="!cart.coupon">
-                {{ cart.total }}
-              </div>
+              <div v-if="!cart.coupon">{{ cart.total }}</div>
               <div v-else>
                 <del>{{ cart.total }}</del>
-                <div class="text-success mt-2">
-                  {{ cart.final_total }}
-                </div>
+                <div class="text-success mt-2">{{ cart.final_total }}</div>
               </div>
             </td>
             <td class="text-center">
@@ -80,32 +76,20 @@
             <td class="d-md-table-cell d-none"></td>
             <td class="d-sm-table-cell d-none"></td>
             <td class="text-right">共 {{ cartsLength }} 件</td>
-            <td class="text-right">
-              運費
-            </td>
-            <td class="text-right">
-              $0
-            </td>
+            <td class="text-right">運費</td>
+            <td class="text-right">$0</td>
           </tr>
           <tr>
             <td class="d-md-table-cell d-none"></td>
             <td class="d-sm-table-cell d-none"></td>
-            <td colspan="2" class="text-right">
-              總計
-            </td>
-            <td class="text-right">
-              {{ carts.total }}
-            </td>
+            <td colspan="2" class="text-right">總計</td>
+            <td class="text-right">{{ carts.total }}</td>
           </tr>
           <tr class="text-success" v-if="carts.total !== carts.final_total">
             <td class="d-md-table-cell d-none"></td>
             <td class="d-sm-table-cell d-none"></td>
-            <td colspan="2" class="text-right">
-              折扣後金額
-            </td>
-            <td class="text-right">
-              {{ carts.final_total }}
-            </td>
+            <td colspan="2" class="text-right">折扣後金額</td>
+            <td class="text-right">{{ carts.final_total }}</td>
           </tr>
         </tfoot>
       </table>
@@ -116,8 +100,28 @@
           placeholder="請輸入折價卷代碼"
           v-model="couponCode"
         />
-        <div class="input-group-append" @click.prevent="addCouponCode">
-          <button class="btn btn-success" type="button">套用折價卷</button>
+        <div class="input-group-append">
+          <button
+            v-if="carts.total === carts.final_total"
+            class="btn btn-success"
+            type="button"
+            @click.prevent="addCouponCode"
+          >
+            套用折價卷
+          </button>
+
+          <div v-else>
+            <button
+              class="btn btn-danger"
+              type="button"
+              @click.prevent="resetCoupon"
+            >
+              重新輸入折扣碼
+            </button>
+            <button disabled class="btn btn-success" type="button">
+              已套用折價卷
+            </button>
+          </div>
         </div>
       </div>
       <div class="mb-4 stepBtn">
@@ -170,27 +174,34 @@ export default {
   methods: {
     addCouponCode() {
       const url = "http://localhost:5000/api/getCoupons/useCoupon";
-      axios.post(url, { couponCode: this.couponCode }).then(
-        res => {
-          if (res) {
-            this.$store.dispatch("alertMessageModules/updateMessage", {
-              message: res.data.message,
-              status: "success"
-            });
+      axios
+        .post(url, { couponCode: this.couponCode, cartId: this.carts._id })
+        .then(
+          res => {
+            if (res) {
+              this.$store.dispatch("cartsModules/getCart");
+              this.$store.dispatch("alertMessageModules/updateMessage", {
+                message: res.data.message,
+                status: "success"
+              });
+            }
+          },
+          err => {
+            if (err.response) {
+              this.$store.dispatch("alertMessageModules/updateMessage", {
+                message: err.response.data.message,
+                status: "danger"
+              });
+            }
           }
-        },
-        err => {
-          if (err.response) {
-            this.$store.dispatch("alertMessageModules/updateMessage", {
-              message: err.response.data.message,
-              status: "danger"
-            });
-          }
-        }
-      );
+        );
     },
     removeCartItem(id) {
       this.$store.dispatch("cartsModules/removeCartItem", id);
+    },
+    resetCoupon() {
+      this.couponCode = "";
+      this.carts.final_total = this.carts.total;
     }
   },
   computed: {
