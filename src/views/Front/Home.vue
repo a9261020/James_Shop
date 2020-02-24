@@ -27,7 +27,9 @@
           aliquid numquam vero!
         </small>
       </div>
-      <router-link to="/coupongame" class="btn btn-primary">立即領取</router-link>
+      <router-link to="/coupongame" class="btn btn-primary"
+        >立即領取</router-link
+      >
     </div>
 
     <CardSider />
@@ -43,7 +45,9 @@
           <div class="news-border">
             <h3 class="mb-3">Hot Sale</h3>
             <p>Popular Products</p>
-            <router-link to="/productslist" class="btn btn-primary">Go Shop</router-link>
+            <router-link to="/productslist" class="btn btn-primary"
+              >Go Shop</router-link
+            >
           </div>
         </div>
       </div>
@@ -52,7 +56,9 @@
           <div class="news-border">
             <h3 class="mb-3">New Arrival</h3>
             <p>Summer Clothing</p>
-            <router-link to="/productslist" class="btn btn-primary">Shop Now</router-link>
+            <router-link to="/productslist" class="btn btn-primary"
+              >Shop Now</router-link
+            >
           </div>
         </div>
         <div class="mb-4 news-img news-img-2">
@@ -66,11 +72,26 @@
     <div class="mb-4 joinus">
       <div class="joinus-content">
         <h3 class="mb-4">Join our mailing list for updates</h3>
-        <ValidationProvider name="email" rules="email" v-slot="{ errors }">
-          <input class="form-control" type="email" v-model="email" />
+        <ValidationProvider
+          name="email"
+          rules="required|email"
+          v-slot="{ errors }"
+        >
+          <input
+            :class="{ 'is-invalid': errors[0] }"
+            class="form-control"
+            type="email"
+            v-model="email"
+          />
           <span>{{ errors[0] }}</span>
         </ValidationProvider>
-        <button type="button" class="form-control btn btn-primary mt-3">Subscribe Now</button>
+        <button
+          type="button"
+          class="form-control btn btn-primary mt-3"
+          @click="joinusBtn"
+        >
+          Subscribe Now
+        </button>
       </div>
     </div>
   </div>
@@ -104,7 +125,8 @@ export default {
         path: "/productslist",
         query: { category: categoryTitle }
       });
-    }
+    },
+    joinusBtn() {}
   }
 };
 </script>

@@ -10,7 +10,7 @@ import { email, numeric, max_value, min_value } from "vee-validate/dist/rules";
 
 extend("email", {
   ...email,
-  message: "Hey fill in you email"
+  message: "請輸入正確的mail格式"
 });
 
 extend("numeric", {

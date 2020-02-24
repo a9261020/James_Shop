@@ -114,7 +114,7 @@
             <button
               class="btn btn-danger"
               type="button"
-              @click.prevent="resetCoupon"
+              @click.prevent="resetCouponBtn"
             >
               重新輸入折扣碼
             </button>
@@ -139,6 +139,146 @@
         </a>
       </div>
     </div>
+
+    <!-- step2：填寫訂購資料 -->
+    <div v-if="step === 2" class="mb-4">
+      <div id="accordion">
+        <div class="card mb-4">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button
+                class="btn btn-link"
+                data-toggle="collapse"
+                data-target="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne"
+              >
+                購物車清單
+                <i class="fas fa-caret-down"></i>
+              </button>
+            </h5>
+          </div>
+          <div
+            id="collapseOne"
+            class="collapse"
+            aria-labelledby="headingOne"
+            data-parent="#accordion"
+          >
+            <div class="card-body">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <td>商品</td>
+                    <td width="25%">數量</td>
+                    <td width="15%">價格</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="cart in carts.carts" :key="cart.id">
+                    <td>{{ cart.product.title }}</td>
+                    <td>{{ cart.qty }} / {{ cart.product.unit }}</td>
+                    <td class="text-right">
+                      {{ cart.final_total }}
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td></td>
+                    <td>總計</td>
+                    <td class="text-right">
+                      {{ carts.final_total }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h5 class="text-center">訂購資料</h5>
+        <form @submit.prevent="createOrder">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="form-control"
+              placeholder="請輸入 Email"
+              v-model="form.user.email"
+            />
+            <!-- <span class="text-danger" v-if="errors.first('email')">{{
+              errors.first("email")
+            }}</span> -->
+          </div>
+          <div class="form-group">
+            <label for="name">收件人姓名</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              class="form-control"
+              placeholder="請輸入收件人姓名"
+              v-model="form.user.name"
+            />
+            <!-- <span class="text-danger" v-if="errors.has('name')"
+              >姓名欄位不得留空</span
+            > -->
+          </div>
+          <div class="form-group">
+            <label for="tel">收件人電話</label>
+            <input
+              type="tel"
+              name="tel"
+              id="tel"
+              class="form-control"
+              placeholder="請輸入收寄人電話"
+              v-model="form.user.tel"
+            />
+            <!-- <span class="text-danger" v-if="errors.has('tel')"
+              >電話欄位不得留空</span
+            > -->
+          </div>
+          <div class="form-group">
+            <label for="address">收件人地址</label>
+            <input
+              type="text"
+              name="address"
+              id="address"
+              class="form-control"
+              placeholder="請輸入收件人地址"
+              v-model="form.user.address"
+            />
+            <!-- <span class="text-danger" v-if="errors.has('address')"
+              >地址欄位不得留空</span
+            > -->
+          </div>
+          <div class="form-group mb-4">
+            <label for="message">留言</label>
+            <textarea
+              name="message"
+              id="message"
+              class="form-control"
+              cols="20"
+              rows="5"
+              v-model="form.message"
+            ></textarea>
+          </div>
+          <div class="stepBtn">
+            <a href="#" class="btn btn-success" @click.prevent="step = 1">
+              <i class="fas fa-arrow-left"></i>
+              回上一步
+            </a>
+            <button class="btn btn-danger float-right">
+              確認訂購
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -153,6 +293,7 @@ export default {
       couponCode: "",
       form: {
         user: {
+          userId: "",
           name: "",
           email: "",
           tel: "",
@@ -199,9 +340,25 @@ export default {
     removeCartItem(id) {
       this.$store.dispatch("cartsModules/removeCartItem", id);
     },
-    resetCoupon() {
+    resetCouponBtn() {
       this.couponCode = "";
       this.carts.final_total = this.carts.total;
+    },
+    createOrder() {
+      const url = "http://localhost:5000/api/getOrders/createOrder";
+      const cartsJson = JSON.stringify(this.carts);
+      this.form.user.userId = sessionStorage.getItem("userId");
+      this.order = this.form;
+
+      axios.post(url, { order: this.order, cart: cartsJson }).then(res => {
+        if (res.data.success) {
+          this.step++;
+          this.$store.dispatch("alertMessageModules/updateMessage", {
+            message: res.data.message,
+            status: "success"
+          });
+        }
+      });
     }
   },
   computed: {
