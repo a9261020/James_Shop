@@ -12,16 +12,22 @@
           </tr>
         </thead>
         <tbody>
-          <tr :class="{ 'bg-light' :order.is_paid }" v-for="order in orders" :key="order.id">
+          <tr
+            :class="{ 'bg-light': order.is_paid }"
+            v-for="order in orders"
+            :key="order.id"
+          >
             <td class="text-center">{{ order.create_at }}</td>
-            <td class="d-sm-table-cell d-none" v-if="order.user">{{ order.user.email }}</td>
+            <td class="d-sm-table-cell d-none" v-if="order.user">
+              {{ order.user.email }}
+            </td>
 
             <td class="d-lg-table-cell d-none">
               <ul class="list-unstyled">
-                <li
-                  v-for="(item,index) in orders"
-                  :key="index"
-                >{{item.products.title}}:{{item.products.qty}}{{item.products.unit}}</li>
+                <li v-for="(item, index) in orders" :key="index">
+                  {{ item.products.title }}:{{ item.products.qty
+                  }}{{ item.products.unit }}
+                </li>
               </ul>
             </td>
             <td class="text-right">{{ order.total }}</td>
@@ -37,26 +43,26 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      orders: [
-        {
-          id: 1,
-          create_at: new Date(),
-          is_paid: true,
-          user: {
-            email: "user@email.com"
-          },
-          products: {
-            title: "Order1",
-            qty: 5,
-            unit: "件"
-          },
-          total: 5000
-        }
-      ]
+      orders: {}
     };
+  },
+  methods: {
+    getOrder() {
+      const url = "http://localhost:5000/api/getOrders";
+      axios.get(url).then(res => {
+        if (res.data.success) {
+          this.orders = res.data.orders;
+        }
+      });
+    }
+  },
+  created() {
+    this.getOrder();
   }
 };
 </script>
