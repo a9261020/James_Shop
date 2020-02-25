@@ -177,18 +177,14 @@
                   <tr v-for="cart in carts.carts" :key="cart.id">
                     <td>{{ cart.product.title }}</td>
                     <td>{{ cart.qty }} / {{ cart.product.unit }}</td>
-                    <td class="text-right">
-                      {{ cart.final_total }}
-                    </td>
+                    <td class="text-right">{{ cart.final_total }}</td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
                     <td></td>
                     <td>總計</td>
-                    <td class="text-right">
-                      {{ carts.final_total }}
-                    </td>
+                    <td class="text-right">{{ carts.final_total }}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -211,7 +207,7 @@
             />
             <!-- <span class="text-danger" v-if="errors.first('email')">{{
               errors.first("email")
-            }}</span> -->
+            }}</span>-->
           </div>
           <div class="form-group">
             <label for="name">收件人姓名</label>
@@ -225,7 +221,7 @@
             />
             <!-- <span class="text-danger" v-if="errors.has('name')"
               >姓名欄位不得留空</span
-            > -->
+            >-->
           </div>
           <div class="form-group">
             <label for="tel">收件人電話</label>
@@ -239,7 +235,7 @@
             />
             <!-- <span class="text-danger" v-if="errors.has('tel')"
               >電話欄位不得留空</span
-            > -->
+            >-->
           </div>
           <div class="form-group">
             <label for="address">收件人地址</label>
@@ -253,7 +249,7 @@
             />
             <!-- <span class="text-danger" v-if="errors.has('address')"
               >地址欄位不得留空</span
-            > -->
+            >-->
           </div>
           <div class="form-group mb-4">
             <label for="message">留言</label>
@@ -278,6 +274,66 @@
           </div>
         </form>
       </div>
+    </div>
+
+    <!-- step3：付款/完成訂單 -->
+    <div v-if="step === 3" class="mb-4">
+      <form @submit.prevent="payOrder">
+        <table class="table mb-3">
+          <thead>
+            <tr>
+              <th>商品</th>
+              <th width="25%">數量</th>
+              <th width="15%">價格</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="orderItem in order.products.carts" :key="orderItem.id">
+              <td>{{ orderItem.product.title }}</td>
+              <td>{{ orderItem.qty }} / {{ orderItem.product.unit }}</td>
+              <td class="text-right">{{ orderItem.total }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="text-success">
+              <td></td>
+              <td>總計</td>
+              <td class="text-right">{{ order.price }}</td>
+            </tr>
+          </tfoot>
+        </table>
+        <table class="table mb-3">
+          <tr>
+            <th width="150">訂購編號</th>
+            <td>{{ order.orderNo }}</td>
+          </tr>
+          <tr>
+            <th width="150">訂購人Email</th>
+            <td>{{ order.user.email }}</td>
+          </tr>
+          <tr>
+            <th>訂購人姓名</th>
+            <td>{{ order.user.name }}</td>
+          </tr>
+          <tr>
+            <th>訂購人電話</th>
+            <td>{{ order.user.tel }}</td>
+          </tr>
+          <tr>
+            <th>留言</th>
+            <td>{{ order.message }}</td>
+          </tr>
+          <tr>
+            <th>付款狀態</th>
+            <td v-if="!order.is_paid">尚未付款</td>
+            <td class="text-success" v-else>付款成功</td>
+          </tr>
+        </table>
+
+        <div class="text-right" v-if="!order.is_paid">
+          <button class="btn btn-danger">確認付款去</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -346,19 +402,25 @@ export default {
     },
     createOrder() {
       const url = "http://localhost:5000/api/getOrders/createOrder";
-      const cartsJson = JSON.stringify(this.carts);
       this.form.user.userId = sessionStorage.getItem("userId");
       this.order = this.form;
 
-      axios.post(url, { order: this.order, cart: cartsJson }).then(res => {
+      axios.post(url, { order: this.order, cart: this.carts }).then(res => {
         if (res.data.success) {
           this.step++;
           this.$store.dispatch("alertMessageModules/updateMessage", {
             message: res.data.message,
             status: "success"
           });
+          this.$store.dispatch("cartsModules/getCart");
+          this.order = res.data.order;
+          this.order.products = JSON.parse(this.order.products);
         }
       });
+    },
+    payOrder() {
+      const url = "1234";
+      url;
     }
   },
   computed: {
