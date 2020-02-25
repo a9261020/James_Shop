@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Alert />
     <form class="form-signin" @submit.prevent="login">
       <h1 class="h3 mb-3 font-weight-normal text-center">請輸入資料登入</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
@@ -39,6 +40,7 @@
 
 <script>
 import axios from "axios";
+import Alert from "@/components/AlertMessage.vue";
 
 export default {
   data() {
@@ -49,6 +51,9 @@ export default {
       }
     };
   },
+  components: {
+    Alert
+  },
   methods: {
     login() {
       axios.post("http://localhost:5000/api/login", this.user).then(
@@ -57,11 +62,20 @@ export default {
             const userId = res.data.userId;
             const token = res.data.token;
             this.$store.dispatch("login", { token, userId });
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
             this.$router.push("/dashboard");
           }
         },
         err => {
-          console.log(err.response);
+          if (err) {
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: err.response.data.message,
+              status: "danger"
+            });
+          }
         }
       );
     }

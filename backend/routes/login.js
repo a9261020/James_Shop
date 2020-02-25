@@ -12,14 +12,14 @@ loginRoute.route("/").post((req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) {
       return res.status(500).json({
-        title: "連接不到伺服器",
+        message: "連接不到伺服器",
         error: err
       });
     }
 
     if (!user) {
       return res.status(401).json({
-        title: "尚未註冊",
+        message: "尚未註冊",
         error: "驗證失敗",
         success: "false"
       });
@@ -27,14 +27,14 @@ loginRoute.route("/").post((req, res) => {
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       return res.status(401).json({
-        title: "登入失敗",
+        message: "密碼錯誤",
         error: "驗證失敗",
         success: "false"
       });
     }
     let token = jwt.sign({ userId: user._id }, "secretKey");
     return res.status(200).json({
-      title: "登入成功",
+      message: "登入成功",
       success: "true",
       token: token,
       userId: user._id

@@ -31,7 +31,8 @@ getOrderRoute.route("/createOrder").post((req, res) => {
     payment_method: "Credit Card",
     products: cart,
     price: req.body.cart.final_total,
-    user: order
+    user: order,
+    createDate: new Date()
   });
 
   newOrder.save((err, order) => {
