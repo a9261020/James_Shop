@@ -53,13 +53,16 @@ export default {
   methods: {
     getOrder() {
       const url = "http://localhost:5000/api/getOrders";
+      this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {
+          this.$store.dispatch("updateLoading", false);
           this.orders = res.data.orders;
           this.orders.forEach(item => {
             item.products = JSON.parse(item.products);
           });
         }
+        this.$store.dispatch("updateLoading", false);
       });
     }
   },

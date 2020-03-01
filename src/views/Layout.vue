@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Loading :active.sync="isLoading"></Loading>
     <AlertMessage />
     <nav class="navbar navbar-expand-lg navbar-light bg-transparent px-0">
       <router-link class="navbar-brand logo" to="/">James's Shop</router-link>
@@ -36,9 +37,20 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/coupongame">Coupons</router-link>
           </li>
-          <li class="nav-item ml-lg-auto pt-1">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/contact">Contact</router-link>
+          </li>
+          <li class="nav-item ml-lg-auto pt-1" v-if="!getisLogin">
             <router-link class="nav-link" to="/login">
               <i class="fas fa-user-circle fa-lg"></i>
+            </router-link>
+          </li>
+          <li class="nav-item pt-1 ml-lg-auto" v-if="getisLogin">
+            {{ getUser.name }} 你好
+          </li>
+          <li class="nav-item pt-1" @click="logout" v-if="getisLogin">
+            <router-link class="nav-link" to="/">
+              <i class="fas fa-sign-out-alt fa-lg "></i>
             </router-link>
           </li>
         </ul>
@@ -165,8 +177,8 @@
                 >
               </li>
               <li>
-                <a href="mailto:carolshop@mail.com" class="text-muted"
-                  >Mail： carolshop@mail.com</a
+                <a href="mailto:Jamesshop@mail.com" class="text-muted"
+                  >Mail： Jamesshop@mail.com</a
                 >
               </li>
               <li class="text-muted">地址： 地球上的某一個角落</li>
@@ -280,11 +292,19 @@ export default {
     },
     removeCartItem(id) {
       this.$store.dispatch("cartsModules/removeCartItem", id);
+    },
+    logout() {
+      this.$store.dispatch("logout");
+      this.$store.dispatch("updateLoading", true);
+      setTimeout(() => {
+        this.$store.dispatch("updateLoading", false);
+      }, 2000);
     }
   },
   computed: {
     ...mapGetters("cartsModules", ["carts", "cartsLength", "isCartShow"]),
-    ...mapGetters("favoritesModules", ["favorites", "favoritesLength"])
+    ...mapGetters("favoritesModules", ["favorites", "favoritesLength"]),
+    ...mapGetters(["isLoading", "getisLogin", "getUser"])
   },
   created() {
     this.$store.dispatch("cartsModules/getCart");

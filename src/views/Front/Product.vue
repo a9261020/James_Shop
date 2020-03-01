@@ -294,10 +294,11 @@ export default {
   },
   methods: {
     getProduct() {
-      const vm = this;
-      const url = `http://localhost:5000/api/getProducts/${vm.productId}`;
+      const url = `http://localhost:5000/api/getProducts/${this.productId}`;
+      this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {
+          this.$store.dispatch("updateLoading", false);
           this.product = res.data.data;
           this.favorites.forEach(item => {
             if (item._id === this.product._id) {
@@ -312,6 +313,7 @@ export default {
           this.$router.push("/");
         }
       });
+      this.$store.dispatch("updateLoading", true);
     },
     addFavorite(product) {
       this.$store.dispatch("favoritesModules/addToFavorite", product);

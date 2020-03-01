@@ -8,8 +8,10 @@ export default {
   },
   actions: {
     getProducts(context) {
+      context.commit("LOADING", true, { root: true });
       axios.get("http://localhost:5000/api/getProducts").then(res => {
         if (res.data) {
+          context.commit("LOADING", false, { root: true });
           context.commit("GETPRODUCTS", res.data);
           // 如果我的最愛有值，就將那個商品加入is_favorite的屬性
           if (context.rootState.favoritesModules.favoritesLength) {

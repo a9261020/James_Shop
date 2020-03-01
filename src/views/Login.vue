@@ -59,9 +59,10 @@ export default {
       axios.post("http://localhost:5000/api/login", this.user).then(
         res => {
           if (res.status === 200) {
+            const user = res.data.user;
             const userId = res.data.userId;
             const token = res.data.token;
-            this.$store.dispatch("login", { token, userId });
+            this.$store.dispatch("login", { token, userId, user });
             this.$store.dispatch("alertMessageModules/updateMessage", {
               message: res.data.message,
               status: "success"

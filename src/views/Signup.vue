@@ -38,13 +38,17 @@
         <option>女</option>
       </select>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+        Sign in
+      </button>
       <ul>
         <li>
           <router-link class="text-muted" to="/login">會員登入</router-link>
         </li>
         <li>
-          <router-link class="text-muted" to="/">＜－ 回到 James Shop 購物去</router-link>
+          <router-link class="text-muted" to="/"
+            >＜－ 回到 James Shop 購物去</router-link
+          >
         </li>
       </ul>
     </form>
@@ -72,11 +76,12 @@ export default {
       axios
         .post("http://localhost:5000/api/signup", this.user)
         .then(res => {
-          console.log(res.data);
-          this.$router.push("/login");
+          if (res) {
+            this.$router.push("/login");
+          }
         })
         .catch(err => {
-          console.log(err);
+          err;
         });
     }
   }

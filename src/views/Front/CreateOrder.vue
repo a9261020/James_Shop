@@ -194,85 +194,111 @@
       </div>
       <div>
         <h5 class="text-center">訂購資料</h5>
-        <form @submit.prevent="createOrder">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              class="form-control"
-              placeholder="請輸入 Email"
-              v-model="form.user.email"
-            />
-            <!-- <span class="text-danger" v-if="errors.first('email')">{{
-              errors.first("email")
-            }}</span>-->
-          </div>
-          <div class="form-group">
-            <label for="name">收件人姓名</label>
-            <input
-              type="text"
+
+        <ValidationObserver v-slot="{ handleSubmit }">
+          <form @submit.prevent="handleSubmit(createOrder)">
+            <!-- <div class="form-group"> -->
+            <ValidationProvider
+              name="Email"
+              rules="required|email"
+              v-slot="{ errors }"
+            >
+              <div class="mb-3">
+                <h5>Email</h5>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors[0] }"
+                  placeholder="請輸入 Email"
+                  v-model="form.user.email"
+                />
+                <span>{{ errors[0] }} </span>
+              </div>
+            </ValidationProvider>
+
+            <ValidationProvider
               name="name"
-              id="name"
-              class="form-control"
-              placeholder="請輸入收件人姓名"
-              v-model="form.user.name"
-            />
-            <!-- <span class="text-danger" v-if="errors.has('name')"
-              >姓名欄位不得留空</span
-            >-->
-          </div>
-          <div class="form-group">
-            <label for="tel">收件人電話</label>
-            <input
-              type="tel"
-              name="tel"
-              id="tel"
-              class="form-control"
-              placeholder="請輸入收寄人電話"
-              v-model="form.user.tel"
-            />
-            <!-- <span class="text-danger" v-if="errors.has('tel')"
-              >電話欄位不得留空</span
-            >-->
-          </div>
-          <div class="form-group">
-            <label for="address">收件人地址</label>
-            <input
-              type="text"
+              rules="required"
+              v-slot="{ errors }"
+            >
+              <div class="mb-3">
+                <h5>收件人姓名</h5>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors[0] }"
+                  placeholder="請輸入 收件人姓名"
+                  v-model="form.user.name"
+                />
+                <span>{{ errors[0] }} </span>
+              </div>
+            </ValidationProvider>
+
+            <ValidationProvider name="tel" rules="required" v-slot="{ errors }">
+              <div class="mb-3">
+                <h5>收件人電話</h5>
+                <input
+                  type="text"
+                  name="tel"
+                  id="tel"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors[0] }"
+                  placeholder="請輸入 收件人電話"
+                  v-model="form.user.tel"
+                />
+                <span>{{ errors[0] }} </span>
+              </div>
+            </ValidationProvider>
+
+            <ValidationProvider
               name="address"
-              id="address"
-              class="form-control"
-              placeholder="請輸入收件人地址"
-              v-model="form.user.address"
-            />
-            <!-- <span class="text-danger" v-if="errors.has('address')"
-              >地址欄位不得留空</span
-            >-->
-          </div>
-          <div class="form-group mb-4">
-            <label for="message">留言</label>
-            <textarea
-              name="message"
-              id="message"
-              class="form-control"
-              cols="20"
-              rows="5"
-              v-model="form.message"
-            ></textarea>
-          </div>
-          <div class="stepBtn">
-            <a href="#" class="btn btn-success" @click.prevent="step = 1">
-              <i class="fas fa-arrow-left"></i>
-              回上一步
-            </a>
-            <button class="btn btn-danger float-right">
-              確認訂購
-              <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
-        </form>
+              rules="required"
+              v-slot="{ errors }"
+            >
+              <div class="mb-3">
+                <h5>收件人地址</h5>
+                <input
+                  type="text"
+                  name="address"
+                  id="address"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors[0] }"
+                  placeholder="請輸入 收件人地址"
+                  v-model="form.user.address"
+                />
+                <span>{{ errors[0] }} </span>
+              </div>
+            </ValidationProvider>
+
+            <ValidationProvider name="message">
+              <div class="mb-3">
+                <h5>留言</h5>
+                <textarea
+                  name="message"
+                  id="message"
+                  class="form-control"
+                  cols="20"
+                  rows="5"
+                  v-model="form.message"
+                ></textarea>
+              </div>
+            </ValidationProvider>
+            <div class="stepBtn">
+              <a href="#" class="btn btn-success" @click.prevent="step = 1">
+                <i class="fas fa-arrow-left"></i>
+                回上一步
+              </a>
+              <button class="btn btn-danger float-right">
+                確認訂購
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+        </ValidationObserver>
       </div>
     </div>
 
@@ -419,8 +445,31 @@ export default {
       });
     },
     payOrder() {
-      const url = "1234";
-      url;
+      const url = "http://localhost:5000/api/getOrders/pay";
+      const order = {
+        _id: this.order._id,
+        orderNo: this.order.orderNo,
+        payment_method: this.order.payment_method
+      };
+      axios.post(url, order).then(
+        res => {
+          if (res.data.success) {
+            this.order.is_paid = res.data.is_paid;
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+          }
+        },
+        err => {
+          if (err.response) {
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: err.response.data.message,
+              status: "danger"
+            });
+          }
+        }
+      );
     }
   },
   computed: {

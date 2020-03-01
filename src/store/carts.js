@@ -35,6 +35,7 @@ export default {
         qty
       };
       const url = "http://localhost:5000/api/getCarts/";
+      context.commit("LOADING", true, { root: true });
       axios.post(url, cart).then(res => {
         if (res) {
           const cart = res.data.cart;
@@ -54,13 +55,16 @@ export default {
             { root: true }
           );
         }
+        context.commit("LOADING", false, { root: true });
       });
     },
     removeCartItem(context, _id) {
       const url = `http://localhost:5000/api/getCarts/${_id}`;
       let nowUserId = sessionStorage.getItem("userId");
+      context.commit("LOADING", true, { root: true });
       axios.post(url, { nowUserId }).then(res => {
         if (res) {
+          context.commit("LOADING", false, { root: true });
           context.dispatch("getCart");
           context.dispatch(
             "alertMessageModules/updateMessage",

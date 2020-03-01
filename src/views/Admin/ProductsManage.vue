@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="text-right">
-      <button class="btn btn-primary" @click="openModal(true)">
-        建立新的產品
-      </button>
+      <button class="btn btn-primary" @click="openModal(true)">建立新的產品</button>
     </div>
 
     <div class="table-responsive mt-4">
@@ -16,24 +14,18 @@
             <th class="d-lg-table-cell d-none">原價</th>
             <th class="d-sm-table-cell d-none">售價</th>
             <th class="d-lg-table-cell d-none">是否啟用</th>
-            <th>編輯</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in products" :key="item.id">
-            <td class="d-md-table-cell d-none align-middle">
-              {{ item.category }}
-            </td>
+            <td class="d-md-table-cell d-none align-middle">{{ item.category }}</td>
             <td class="d-lg-table-cell d-none align-middle">
               <img :src="item.imageUrl" class="thumbnail" />
             </td>
             <td class="align-middle nowrap">{{ item.title }}</td>
-            <td class="d-lg-table-cell d-none align-middle">
-              {{ item.origin_price }}
-            </td>
-            <td class="d-sm-table-cell d-none align-middle">
-              {{ item.price }}
-            </td>
+            <td class="d-lg-table-cell d-none align-middle">{{ item.origin_price }}</td>
+            <td class="d-sm-table-cell d-none align-middle">{{ item.price }}</td>
             <td class="d-lg-table-cell d-none align-middle">
               <span v-if="item.is_enabled" class="text-success">啟用</span>
               <span v-else>未啟用</span>
@@ -41,17 +33,10 @@
             <td class="align-middle">
               <div class="btn-group">
                 <button
-                  class="btn btn-outline-primary btn-sm"
+                  class="btn btn-outline-primary btn-sm mr-3"
                   @click="openModal(false, item)"
-                >
-                  編輯
-                </button>
-                <button
-                  class="btn btn-outline-danger btn-sm"
-                  @click="openDelProductModal(item)"
-                >
-                  刪除
-                </button>
+                >編輯</button>
+                <button class="btn btn-outline-danger btn-sm" @click="openDelProductModal(item)">刪除</button>
               </div>
             </td>
           </tr>
@@ -71,15 +56,8 @@
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark">
-            <h5 class="modal-title text-light" id="productModalLabel">
-              新增產品
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <h5 class="modal-title text-light" id="productModalLabel">新增產品</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -99,10 +77,7 @@
                 <div class="form-group">
                   <label for="customFile">
                     或 上傳圖片
-                    <i
-                      class="fas fa-spinner fa-spin"
-                      v-if="status.fileUploading"
-                    ></i>
+                    <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
                   </label>
                   <input
                     type="file"
@@ -213,20 +188,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-dismiss="modal"
-            >
-              取消
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="updateProduct"
-            >
-              確認
-            </button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" @click="updateProduct">確認</button>
           </div>
         </div>
       </div>
@@ -245,12 +208,7 @@
         <div class="modal-content border-0">
           <div class="modal-header bg-danger text-light">
             <h5 class="modal-title" id="delProductModalLabel">刪除產品</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -260,20 +218,8 @@
             (刪除後將無法回復)
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-dismiss="modal"
-            >
-              取消
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              @click="delProduct"
-            >
-              確認刪除
-            </button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-outline-danger" @click="delProduct">確認刪除</button>
           </div>
         </div>
       </div>
@@ -363,7 +309,13 @@ export default {
           }
         });
     },
-    uploadFile() {}
+    uploadFile() {
+      const url = "http://localhost:5000/upload";
+      const uploadedFile = this.$refs.files.files[0];
+      const formData = new FormData();
+      formData.append("file-to-upload", uploadedFile);
+      axios.post(url, formData);
+    }
   },
   created() {
     this.getProducts();

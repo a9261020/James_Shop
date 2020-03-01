@@ -9,6 +9,7 @@ import Dashbaord from "./views/Dashboard";
 import CouponsManage from "./views/Admin/CouponsManage";
 import OrdersManage from "./views/Admin/OrdersManage";
 import ProductsManage from "./views/Admin/ProductsManage";
+import MessagesManage from "./views/Admin/MessagesManage";
 
 // 前端
 import Layout from "./views/Layout";
@@ -17,6 +18,7 @@ import ProductsList from "./views/Front/ProductsList";
 import Product from "./views/Front/Product";
 import CreateOrder from "./views/Front/CreateOrder";
 import CouponGame from "./views/Front/CouponGame";
+import Contact from "./views/Front/Contact";
 
 Vue.use(VueRouter);
 
@@ -42,6 +44,10 @@ export default new VueRouter({
         {
           path: "productsmanage",
           component: ProductsManage
+        },
+        {
+          path: "messagesmanage",
+          component: MessagesManage
         }
       ]
     },
@@ -74,6 +80,11 @@ export default new VueRouter({
           path: "coupongame",
           name: "CouponGame",
           component: CouponGame
+        },
+        {
+          path: "contact",
+          name: "Contact",
+          component: Contact
         }
       ]
     }

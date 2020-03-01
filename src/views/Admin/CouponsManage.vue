@@ -14,7 +14,7 @@
             <th class="d-sm-table-cell d-none">折扣百分比</th>
             <th class="d-sm-table-cell d-none">到期日</th>
             <th class="d-sm-table-cell d-none">是否啟用</th>
-            <th>編輯</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -31,7 +31,7 @@
             <td>
               <div class="btn-group">
                 <button
-                  class="btn btn-outline-primary btn-sm"
+                  class="btn btn-outline-primary btn-sm mr-3"
                   @click="openCouponModal(false, item)"
                 >
                   編輯
@@ -61,7 +61,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="couponModalLabel">折價卷</h5>
+            <h5 class="modal-title" id="couponModalLabel">優惠卷</h5>
             <button
               type="button"
               class="close"
@@ -156,7 +156,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header bg-danger text-light">
-            <h5 class="modal-title" id="delCouponModalLabel">刪除折價卷</h5>
+            <h5 class="modal-title" id="delCouponModalLabel">刪除優惠卷</h5>
             <button
               type="button"
               class="close"
@@ -168,7 +168,7 @@
           </div>
           <div class="modal-body">
             是否刪除
-            <strong class="text-danger">{{ tempCoupon.title }}</strong> 折價卷
+            <strong class="text-danger">{{ tempCoupon.title }}</strong> 優惠卷
             (刪除後將無法回復)
           </div>
           <div class="modal-footer">
@@ -221,8 +221,18 @@ export default {
   methods: {
     getCoupons() {
       const url = "http://localhost:5000/api/getCoupons";
+      this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
-        this.coupons = res.data.data;
+        if (res.data.success) {
+          this.coupons = res.data.data;
+          this.$store.dispatch("updateLoading", false);
+        } else {
+          this.$store.dispatch("alertMessageModules/updateMessage", {
+            message: res.data.message,
+            status: "danger"
+          });
+        }
+        this.$store.dispatch("updateLoading", false);
       });
     },
     openCouponModal(isNew, item) {

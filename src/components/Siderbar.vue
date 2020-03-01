@@ -22,7 +22,12 @@
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/dashboard/couponsmanage">
-            <i class="fas fa-money-bill"></i> 優惠卷
+            <i class="fas fa-money-bill"></i> 優惠卷列表
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/dashboard/messagesmanage">
+            <i class="far fa-comments"></i> 留言板列表
           </router-link>
         </li>
       </ul>

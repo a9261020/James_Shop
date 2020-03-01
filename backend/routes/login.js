@@ -37,7 +37,8 @@ loginRoute.route("/").post((req, res) => {
       message: "登入成功",
       success: "true",
       token: token,
-      userId: user._id
+      userId: user._id,
+      user
     });
   });
 });

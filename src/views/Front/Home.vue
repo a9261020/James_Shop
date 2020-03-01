@@ -72,26 +72,26 @@
     <div class="mb-4 joinus">
       <div class="joinus-content">
         <h3 class="mb-4">Join our mailing list for updates</h3>
-        <ValidationProvider
-          name="email"
-          rules="required|email"
-          v-slot="{ errors }"
-        >
-          <input
-            :class="{ 'is-invalid': errors[0] }"
-            class="form-control"
-            type="email"
-            v-model="email"
-          />
-          <span>{{ errors[0] }}</span>
-        </ValidationProvider>
-        <button
-          type="button"
-          class="form-control btn btn-primary mt-3"
-          @click="joinusBtn"
-        >
-          Subscribe Now
-        </button>
+        <ValidationObserver v-slot="{ handleSubmit }">
+          <form @submit.prevent="handleSubmit(joinusBtn)">
+            <ValidationProvider
+              name="email"
+              rules="required|email"
+              v-slot="{ errors }"
+            >
+              <input
+                :class="{ 'is-invalid': errors[0] }"
+                class="form-control"
+                type="text"
+                v-model="email"
+              />
+              <span>{{ errors[0] }}</span>
+              <button class="form-control btn btn-primary mt-3">
+                Subscribe Now
+              </button>
+            </ValidationProvider>
+          </form>
+        </ValidationObserver>
       </div>
     </div>
   </div>
@@ -126,7 +126,12 @@ export default {
         query: { category: categoryTitle }
       });
     },
-    joinusBtn() {}
+    joinusBtn() {
+      this.$store.dispatch("alertMessageModules/updateMessage", {
+        message: "訂閱成功",
+        status: "success"
+      });
+    }
   }
 };
 </script>

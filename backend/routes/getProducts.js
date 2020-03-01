@@ -6,7 +6,7 @@ const ProductModel = require("../model/products");
 getProductsRoute.route("/").get((req, res) => {
   ProductModel.find((err, data) => {
     if (err) res.send(err);
-    res.send(data);
+    return res.send(data);
   });
 });
 
@@ -14,7 +14,7 @@ getProductsRoute.route("/").get((req, res) => {
 getProductsRoute.route("/:_id").get((req, res) => {
   ProductModel.findOne({ _id: req.params._id }, (err, data) => {
     if (err) res.send(err);
-    res.status(200).json({
+    return res.status(200).json({
       data: data,
       success: true
     });
@@ -86,7 +86,7 @@ getProductsRoute.route("/:_id").post((req, res) => {
       if (err) {
         console.log(err);
       }
-      res.status(200).json({
+      return res.status(200).json({
         message: "修改成功",
         success: true
       });
@@ -104,7 +104,7 @@ getProductsRoute.route("/:_id").delete((req, res) => {
         success: false
       });
     }
-    res.status(200).json({
+    return res.status(200).json({
       message: "刪除成功",
       success: true
     });

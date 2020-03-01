@@ -30,17 +30,26 @@
                 <b>見證奇蹟的時刻!</b>
               </div>
               <div class="card-body">
-                <ValidationProvider
-                  rules="numeric|max_value:100|min_value:1"
-                  v-slot="{ errors }"
-                >
-                  <input class="col " type="text" v-model.number="guess" />
-                  <span>{{ errors[0] }}</span>
-                  <br />
-                </ValidationProvider>
-                <button class="btn btn-outline-warning mt-3" @click="submit">
-                  一猜入魂
-                </button>
+                <ValidationObserver v-slot="{ handleSubmit }">
+                  <form @submit.prevent="handleSubmit(submit)">
+                    <ValidationProvider
+                      rules="required|numeric|minmax:1,100"
+                      v-slot="{ errors }"
+                    >
+                      <input
+                        class="form-control"
+                        :class="{ 'is-invalid': errors[0] }"
+                        type="text"
+                        v-model.number="guess"
+                      />
+                      <span>{{ errors[0] }}</span>
+                      <br />
+                    </ValidationProvider>
+                    <button class="btn btn-outline-warning mt-3">
+                      一猜入魂
+                    </button>
+                  </form>
+                </ValidationObserver>
               </div>
             </div>
           </div>
@@ -52,6 +61,27 @@
 
 <script>
 import swal from "sweetalert";
+import { numeric, required } from "vee-validate/dist/rules";
+import { ValidationProvider, extend } from "vee-validate";
+
+extend("required", {
+  ...required,
+  message: "輸入一個1~100之間的數字"
+});
+
+extend("numeric", {
+  ...numeric,
+  message: "請輸入數字!!!"
+});
+
+extend("minmax", {
+  validate(number, { min, max }) {
+    Math.abs(number);
+    return number >= min && number <= max;
+  },
+  params: ["min", "max"],
+  message: "數字必須介於1~100之間"
+});
 
 export default {
   data() {
@@ -62,22 +92,15 @@ export default {
       times: 0
     };
   },
+  components: {
+    ValidationProvider
+  },
   methods: {
     gameStart() {
       this.inGame = true;
       this.secretNumber = Math.floor(Math.random() * 100);
     },
     submit() {
-      //  數字超過
-      if (this.guess <= 0 || this.guess > 100) {
-        swal({
-          title: "看下面提示好嗎?",
-          icon: "error",
-          button: "抱歉，我沒看到"
-        });
-        return;
-      }
-
       // 答對了
       if (this.guess === this.secretNumber) {
         this.inGame = false;
@@ -85,7 +108,6 @@ export default {
       } else {
         // 答錯了
         this.times++;
-
         // 超過次數
         if (this.times >= 3) {
           this.getCoupon();
@@ -104,35 +126,44 @@ export default {
         case 0:
           swal({
             title: `恭喜你一次答對`,
-            text: "你的折扣碼是 xxx 將會得到50%折扣",
+            text: "你的折扣碼是 Welcome50% 將會得到50%折扣",
             icon: "success",
             button: "購物去"
           }).then(() => {
-            this.$router.push("createorder");
+            this.$router.push("productslist");
           });
           break;
 
         case 1:
           swal({
             title: `差了一點點呢`,
-            text: "你的折扣碼是 xxx 將會得到70%折扣",
-            icon: "success"
+            text: "你的折扣碼是 Welcome70% 將會得到70%折扣",
+            icon: "success",
+            button: "購物去"
+          }).then(() => {
+            this.$router.push("productslist");
           });
           break;
 
         case 2:
           swal({
             title: `千鈞一髮`,
-            text: "你的折扣碼是 xxx 將會得到80%折扣",
-            icon: "warning"
+            text: "你的折扣碼是 Welcome80% 將會得到80%折扣",
+            icon: "warning",
+            button: "購物去"
+          }).then(() => {
+            this.$router.push("productslist");
           });
           break;
 
         default:
           swal({
             title: `太可惜了，但我還是會給你折扣`,
-            text: "你的折扣碼是 xxx 將會得到90%折扣",
-            icon: "error"
+            text: "你的折扣碼是 Welcome90% 將會得到90%折扣",
+            icon: "error",
+            button: "購物去"
+          }).then(() => {
+            this.$router.push("productslist");
           });
       }
     }
