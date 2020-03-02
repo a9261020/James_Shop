@@ -10,14 +10,14 @@ signupRoute.route("/").post((req, res) => {
     name: req.body.name,
     password: bcrypt.hashSync(req.body.password, 10),
     gender: req.body.gender,
-    createDate: req.body.createDate,
-    isAdmin: req.body.isAdmin
+    createDate: new Date(),
+    isAdmin: false
   });
   newUser.save(err => {
     if (err) {
       return res.status(400).json({
-        title: "註冊失敗",
-        error: "信箱已存在"
+        title: "伺服器錯誤",
+        err
       });
     }
     return res.status(200).json({

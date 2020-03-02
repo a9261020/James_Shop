@@ -45,10 +45,15 @@
               <i class="fas fa-user-circle fa-lg"></i>
             </router-link>
           </li>
-          <li class="nav-item pt-1 ml-lg-auto" v-if="getisLogin">
-            {{ getUser.name }} 你好
+          <li class="nav-item pt-1 ml-lg-auto mr-1" v-if="isLogin">
+            {{ getUser.name }}
           </li>
-          <li class="nav-item pt-1" @click="logout" v-if="getisLogin">
+          <li class="nav-item pt-1" v-if="isLogin && getUser.isAdmin">
+            <router-link class="nav-link" to="/dashboard">
+              Dashboard
+            </router-link>
+          </li>
+          <li class="nav-item pt-1" @click="logout" v-if="isLogin">
             <router-link class="nav-link" to="/">
               <i class="fas fa-sign-out-alt fa-lg "></i>
             </router-link>
@@ -297,11 +302,24 @@ export default {
       this.$store.dispatch("logout");
       this.$store.dispatch("updateLoading", true);
       setTimeout(() => {
+        this.$store.dispatch("alertMessageModules/updateMessage", {
+          message: "已登出",
+          status: "warning"
+        });
         this.$store.dispatch("updateLoading", false);
       }, 2000);
     }
   },
   computed: {
+    isLogin() {
+      if (sessionStorage.getItem("token") && sessionStorage.getItem("userId")) {
+        const token = sessionStorage.getItem("token");
+        const userId = sessionStorage.getItem("userId");
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        this.$store.dispatch("login", { token, userId, user });
+      }
+      return this.$store.getters.getisLogin;
+    },
     ...mapGetters("cartsModules", ["carts", "cartsLength", "isCartShow"]),
     ...mapGetters("favoritesModules", ["favorites", "favoritesLength"]),
     ...mapGetters(["isLoading", "getisLogin", "getUser"])

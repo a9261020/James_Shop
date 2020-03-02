@@ -10,6 +10,7 @@ import CouponsManage from "./views/Admin/CouponsManage";
 import OrdersManage from "./views/Admin/OrdersManage";
 import ProductsManage from "./views/Admin/ProductsManage";
 import MessagesManage from "./views/Admin/MessagesManage";
+import UsersManage from "./views/Admin/UsersManage";
 
 // 前端
 import Layout from "./views/Layout";
@@ -48,6 +49,10 @@ export default new VueRouter({
         {
           path: "messagesmanage",
           component: MessagesManage
+        },
+        {
+          path: "usersmanage",
+          component: UsersManage
         }
       ]
     },

@@ -24,7 +24,19 @@
       <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
         Login
       </button>
+
       <ul>
+        <li class="h3 text-center">
+          使用臉書登入
+          <facebook-login
+            class="btn btn-lg facebookBtn"
+            appId="2520743858163811"
+            @login="onLogin"
+            @logout="onLogout"
+            @sdk-loaded="sdkLoaded"
+          >
+          </facebook-login>
+        </li>
         <li>
           <router-link class="text-muted" to="/signup">尚未註冊</router-link>
         </li>
@@ -41,6 +53,7 @@
 <script>
 import axios from "axios";
 import Alert from "@/components/AlertMessage.vue";
+import facebookLogin from "facebook-login-vuejs";
 
 export default {
   data() {
@@ -52,9 +65,35 @@ export default {
     };
   },
   components: {
-    Alert
+    Alert,
+    facebookLogin
   },
   methods: {
+    getUserData() {
+      this.FB.api(
+        "/me",
+        "GET",
+        {
+          fields: "id,name,gender,email"
+        },
+        userInformation => {
+          this.user = userInformation;
+          this.loginByFB();
+        }
+      );
+    },
+    sdkLoaded(payload) {
+      this.isConnected = payload.isConnected;
+      this.FB = payload.FB;
+      if (this.isConnected) this.getUserData();
+    },
+    onLogin() {
+      this.isConnected = true;
+      this.getUserData();
+    },
+    onLogout() {
+      this.isConnected = false;
+    },
     login() {
       axios.post("http://localhost:5000/api/login", this.user).then(
         res => {
@@ -67,7 +106,7 @@ export default {
               message: res.data.message,
               status: "success"
             });
-            this.$router.push("/dashboard");
+            this.$router.push("/");
           }
         },
         err => {
@@ -79,6 +118,28 @@ export default {
           }
         }
       );
+    },
+    loginByFB() {
+      this.$store.dispatch("updateLoading", true);
+      axios
+        .post("http://localhost:5000/api/login/loginByFB", this.user)
+        .then(res => {
+          if (res.data.success) {
+            this.$store.dispatch("updateLoading", false);
+            const user = res.data.user;
+            const userId = res.data.userId;
+            const token = res.data.token;
+            this.$store.dispatch("login", { token, userId, user });
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+            this.$router.push("/");
+          }
+        })
+        .catch(err => {
+          err;
+        });
     }
   }
 };
