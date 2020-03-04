@@ -22,7 +22,6 @@ messagesRoute.route("/getMessages").get((req, res) => {
 
 // 新增留言
 messagesRoute.route("/addMessage").post((req, res) => {
-  console.log(req);
   const userName = req.body.userName === "" ? "訪客" : req.body.userName;
 
   const newMessage = new messagesModel({

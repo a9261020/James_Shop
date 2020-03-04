@@ -38,6 +38,7 @@ export default new Vuex.Store({
     LOGOUT(state) {
       sessionStorage.clear();
       state.isLogin = false;
+      state.user = {};
     },
     LOADING(state, status) {
       state.isLoading = status;

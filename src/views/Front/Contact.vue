@@ -28,15 +28,13 @@
                   rows="10"
                   v-model="newMessage.context"
                 ></textarea>
-                <span class="font-weight-bold text-danger "
-                  >{{ errors[0] }}
+                <span class="font-weight-bold text-danger">
+                  {{ errors[0] }}
                 </span>
               </div>
             </ValidationProvider>
-            <div class="submitBtn ">
-              <button class="mr-5 btn btn-primary">
-                送出留言
-              </button>
+            <div class="submitBtn">
+              <button class="mr-5 btn btn-primary">送出留言</button>
               <a href="#" class="btn btn-danger" @click="resetMessageBtn"
                 >清除留言</a
               >
@@ -49,7 +47,11 @@
       <div class="col-md-6">
         <!-- 卡片 -->
         <div id="card">
-          <div class="card mb-3" v-for="message in messages" :key="message._id">
+          <div
+            class="card mb-3"
+            v-for="message in thisPageShow"
+            :key="message._id"
+          >
             <div class="card-header">
               <a
                 class="card-link"
@@ -57,11 +59,10 @@
                 :href="`#message-${message._id}`"
               >
                 <blockquote class="blockquote">
-                  <p class="mb-1">
-                    {{ message.context }}
-                  </p>
+                  <p class="mb-1">{{ message.context }}</p>
                   <footer class="blockquote-footer">
-                    {{ message.userName }} & {{ message.createDate }}
+                    {{ message.userName }} &
+                    {{ message.createDate.substring(0, 19).replace("T", " ") }}
                     <div v-if="!message.is_reply" class="text-danger mt-1">
                       尚未回覆
                     </div>
@@ -71,25 +72,40 @@
               </a>
             </div>
             <div :id="`message-${message._id}`" class="collapse">
-              <div class="card-body">
-                {{ message.reply }}
-              </div>
+              <div class="card-body">{{ message.reply }}</div>
             </div>
           </div>
 
           <nav aria-label="Page navigation example">
             <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
+              <li class="page-item" v-if="nowPage != 1">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Previous"
+                  @click="changePage(nowPage - 1)"
+                >
                   <span aria-hidden="true">&laquo;</span>
                   <span class="sr-only">Previous</span>
                 </a>
               </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+              <li
+                class="page-item"
+                v-for="page in pageNumber"
+                :key="page"
+                :class="[page == nowPage ? 'active' : undefined]"
+              >
+                <a class="page-link" href="#" @click="changePage(page)">
+                  {{ page }}
+                </a>
+              </li>
+              <li class="page-item" v-if="nowPage != totalPage">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Next"
+                  @click="changePage(nowPage + 1)"
+                >
                   <span aria-hidden="true">&raquo;</span>
                   <span class="sr-only">Next</span>
                 </a>
@@ -110,11 +126,17 @@ export default {
   data() {
     return {
       newMessage: {
-        userName: this.$store.getters.getUser.name,
+        userName: this.$store.getters.getUser.name || "",
         context: ""
       },
       messages: {},
-      created: "Hello"
+      messagesAfterCut: [],
+      thisPageShow: [],
+      totalPage: 0,
+      perPage: 3,
+      nowPage: 1,
+      firstPage: 1,
+      lastPage: 10
     };
   },
   methods: {
@@ -137,7 +159,7 @@ export default {
       });
     },
     resetMessageBtn() {
-      this.context = "";
+      this.newMessage.context = "";
     },
     getMessages() {
       const url = "http://localhost:5000/api/messages/getMessages";
@@ -146,28 +168,47 @@ export default {
         if (res.data.success) {
           this.$store.dispatch("updateLoading", false);
           this.messages = res.data.messages;
+          this.cutMessagesArray();
         } else {
-          this.$store.dispatch("updateLoading", false);
+          this.$store.dispatch("updsateLoading", false);
         }
       });
+    },
+    cutMessagesArray() {
+      const vm = this;
+      const messagesBack = vm.messages.slice(0);
+
+      vm.totalPage = Math.ceil(vm.messages.length / vm.perPage);
+      for (let i = 0; i < vm.totalPage; i++) {
+        vm.messagesAfterCut[i] = [];
+        for (let j = 0; j < vm.perPage; j++) {
+          vm.messagesAfterCut[i].push(messagesBack[j]);
+        }
+        messagesBack.splice(0, vm.perPage);
+      }
+
+      vm.messagesAfterCut[vm.messagesAfterCut.length - 1] = vm.messagesAfterCut[
+        vm.messagesAfterCut.length - 1
+      ].filter(item => item);
+
+      this.lastPage = this.messagesAfterCut.length;
+
+      this.thisPageShow = this.messagesAfterCut[0];
+    },
+    changePage(page) {
+      this.nowPage = page;
+      this.thisPageShow = this.messagesAfterCut[page - 1];
     }
-    // messagesAfterCut() {
-    //   const messagesAfterCut = [];
-    //   const messageBackup = this.messages;
-    //   const backupLen = this.messages.length;
-    //   for (let first = 0; first < backupLen; first++) {
-    //     messagesAfterCut[first] = [];
-    //     for (let second = 0; second < 3; second++) {
-    //       messagesAfterCut[first].push(messageBackup[second]);
-    //     }
-    //     if (messageBackup.length == 0) {
-    //       messageBackup[messageBackup.length - 1].filter(item => item);
-    //       break;
-    //     }
-    //   }
-    // }
   },
+
   computed: {
+    pageNumber() {
+      let arr = [];
+      for (let i = this.firstPage; i <= this.lastPage; i++) {
+        arr.push(i);
+      }
+      return arr;
+    },
     ...mapGetters(["getUser", "getisLogin"])
   },
   created() {

@@ -20,6 +20,7 @@ import Product from "./views/Front/Product";
 import CreateOrder from "./views/Front/CreateOrder";
 import CouponGame from "./views/Front/CouponGame";
 import Contact from "./views/Front/Contact";
+import Order from "./views/Front/Order";
 
 Vue.use(VueRouter);
 
@@ -90,6 +91,11 @@ export default new VueRouter({
           path: "contact",
           name: "Contact",
           component: Contact
+        },
+        {
+          path: "order",
+          name: "Order",
+          component: Order
         }
       ]
     }

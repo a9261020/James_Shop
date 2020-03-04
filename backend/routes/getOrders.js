@@ -34,6 +34,7 @@ getOrderRoute.route("/createOrder").post((req, res) => {
     products: cart,
     price: req.body.cart.final_total,
     user: order,
+    userId: order.userId,
     createDate: new Date()
   });
 
@@ -103,6 +104,32 @@ getOrderRoute.route("/pay").post((req, res) => {
       success: true,
       is_paid: true
     });
+  });
+});
+
+getOrderRoute.route("/:_id").get((req, res) => {
+  const userId = req.params._id;
+  OrdersModel.findOne({ userId }, (err, order) => {
+    if (err) {
+      return res.status(500).json({
+        message: "伺服器錯誤",
+        err,
+        success: false
+      });
+    }
+    console.log(order);
+    if (!order) {
+      return res.status(200).json({
+        message: "無訂單",
+        success: true
+      });
+    } else {
+      return res.status(200).json({
+        message: "訂單資料",
+        success: true,
+        order
+      });
+    }
   });
 });
 

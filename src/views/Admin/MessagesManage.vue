@@ -20,7 +20,10 @@
               {{ message.createDate.substring(0, 19).replace("T", " ") }}
             </td>
             <td>{{ message.reply }}</td>
-            <td>{{ message.replyDate }}</td>
+            <td v-if="!message.is_reply">尚未回覆</td>
+            <td v-else>
+              {{ message.replyDate.substring(0, 19).replace("T", " ") }}
+            </td>
             <td>
               <button
                 class="btn btn-outline-primary btn-sm mr-3"

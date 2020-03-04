@@ -2,7 +2,7 @@
   <div>
     <Alert />
     <form class="form-signin" @submit.prevent="login">
-      <h1 class="h3 mb-3 font-weight-normal text-center">請輸入資料登入</h1>
+      <h1 class="h3 mb-3 font-weight-normal text-center">會員登入</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
       <input
         type="email"

@@ -8,8 +8,8 @@ const OrderSchema = new Schema({
   payment_method: String,
   products: String,
   price: Number,
+  userId: String,
   user: {
-    userId: String,
     address: String,
     email: String,
     name: String,

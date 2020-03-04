@@ -396,12 +396,14 @@ export default {
   },
   methods: {
     addCouponCode() {
+      this.$store.dispatch("updateLoading", true);
       const url = "http://localhost:5000/api/getCoupons/useCoupon";
       axios
         .post(url, { couponCode: this.couponCode, cartId: this.carts._id })
         .then(
           res => {
-            if (res) {
+            if (res.data.success) {
+              this.$store.dispatch("updateLoading", false);
               this.$store.dispatch("cartsModules/getCart");
               this.$store.dispatch("alertMessageModules/updateMessage", {
                 message: res.data.message,
@@ -411,6 +413,7 @@ export default {
           },
           err => {
             if (err.response) {
+              this.$store.dispatch("updateLoading", false);
               this.$store.dispatch("alertMessageModules/updateMessage", {
                 message: err.response.data.message,
                 status: "danger"
@@ -431,18 +434,33 @@ export default {
       this.form.user.userId = sessionStorage.getItem("userId");
       this.order = this.form;
 
-      axios.post(url, { order: this.order, cart: this.carts }).then(res => {
-        if (res.data.success) {
-          this.step++;
-          this.$store.dispatch("alertMessageModules/updateMessage", {
-            message: res.data.message,
-            status: "success"
-          });
-          this.$store.dispatch("cartsModules/getCart");
-          this.order = res.data.order;
-          this.order.products = JSON.parse(this.order.products);
+      this.$store.dispatch("updateLoading", true);
+
+      axios.post(url, { order: this.order, cart: this.carts }).then(
+        res => {
+          if (res.data.success) {
+            this.$store.dispatch("updateLoading", false);
+
+            this.step++;
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+            this.$store.dispatch("cartsModules/getCart");
+            this.order = res.data.order;
+            this.order.products = JSON.parse(this.order.products);
+          }
+        },
+        err => {
+          if (err.response) {
+            this.$store.dispatch("updateLoading", false);
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: err.response.data.message,
+              status: "danger"
+            });
+          }
         }
-      });
+      );
     },
     payOrder() {
       const url = "http://localhost:5000/api/getOrders/pay";
