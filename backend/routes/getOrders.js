@@ -109,7 +109,7 @@ getOrderRoute.route("/pay").post((req, res) => {
 
 getOrderRoute.route("/:_id").get((req, res) => {
   const userId = req.params._id;
-  OrdersModel.findOne({ userId }, (err, order) => {
+  OrdersModel.find({ userId }, (err, order) => {
     if (err) {
       return res.status(500).json({
         message: "伺服器錯誤",
@@ -117,7 +117,6 @@ getOrderRoute.route("/:_id").get((req, res) => {
         success: false
       });
     }
-    console.log(order);
     if (!order) {
       return res.status(200).json({
         message: "無訂單",

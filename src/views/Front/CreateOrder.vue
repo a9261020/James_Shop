@@ -206,6 +206,7 @@
               <div class="mb-3">
                 <h5>Email</h5>
                 <input
+                  :disabled="getisLogin"
                   type="email"
                   name="email"
                   id="email"
@@ -226,6 +227,7 @@
               <div class="mb-3">
                 <h5>收件人姓名</h5>
                 <input
+                  :disabled="getisLogin"
                   type="text"
                   name="name"
                   id="name"
@@ -376,8 +378,8 @@ export default {
       form: {
         user: {
           userId: "",
-          name: "",
-          email: "",
+          name: this.$store.getters.getUser.name || "",
+          email: this.$store.getters.getUser.email || "",
           tel: "",
           address: ""
         },
@@ -491,6 +493,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["getUser", "getisLogin"]),
     ...mapGetters("cartsModules", ["carts", "cartsLength"])
   }
 };
