@@ -24,9 +24,7 @@
               <button
                 class="btn btn-outline-primary btn-sm"
                 @click="openUpdateModalBtn(user)"
-              >
-                調整為管理者
-              </button>
+              >調整為管理者</button>
             </td>
           </tr>
         </tbody>
@@ -45,12 +43,7 @@
         <div class="modal-content">
           <div class="modal-header bg-primary text-light">
             <h5 class="modal-title" id="updateUserLabel">調整權限</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -60,20 +53,8 @@
             為管理者
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-dismiss="modal"
-            >
-              取消
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              @click="updateIsAdminBtn"
-            >
-              調整
-            </button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-outline-danger" @click="updateIsAdminBtn">調整</button>
           </div>
         </div>
       </div>
@@ -96,7 +77,7 @@ export default {
   },
   methods: {
     getUsers() {
-      const url = "http://localhost:5000/api/users/getUsers";
+      const url = "api/users/getUsers";
       this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {
@@ -111,7 +92,7 @@ export default {
       this.tempUser = Object.assign({}, user);
     },
     updateIsAdminBtn() {
-      const url = "http://localhost:5000/api/users/updateIsAdmin";
+      const url = "api/users/updateIsAdmin";
       this.$store.dispatch("updateLoading", true);
       axios.post(url, { _id: this.tempUser._id }).then(res => {
         if (res.data.success) {

@@ -220,7 +220,7 @@ export default {
   },
   methods: {
     getCoupons() {
-      const url = "http://localhost:5000/api/getCoupons";
+      const url = "/api/getCoupons";
       this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {
@@ -250,7 +250,7 @@ export default {
     },
     updateCoupon() {
       if (this.isNew) {
-        const url = "http://localhost:5000/api/getCoupons/addNewCoupon";
+        const url = "/api/getCoupons/addNewCoupon";
         axios.post(url, { data: this.tempCoupon }).then(res => {
           if (res) {
             this.getCoupons();
@@ -261,7 +261,7 @@ export default {
           }
         });
       } else {
-        const url = "http://localhost:5000/api/getCoupons/";
+        const url = "/api/getCoupons/";
         axios.post(url, this.tempCoupon).then(res => {
           if (res) {
             this.getCoupons();
@@ -280,9 +280,7 @@ export default {
     },
     delCoupon() {
       axios
-        .delete(
-          `http://localhost:5000/api/getCoupons/deleteCoupon/${this.tempCoupon._id}`
-        )
+        .delete(`/api/getCoupons/deleteCoupon/${this.tempCoupon._id}`)
         .then(res => {
           if (res) {
             $("#delCouponModal").modal("hide");

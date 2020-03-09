@@ -110,16 +110,6 @@
         <img class="img-fluid" :src="product.imageUrl" />
         <h3>商品介紹</h3>
         <p>{{ product.description }}</p>
-        <img class="img-fluid" src="ct-1." />
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur
-          doloribus, laudantium hic perferendis necessitatibus dolorem ipsam
-        </p>
-        <img class="img-fluid" src="ct-2." />
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam rem
-          sed vitae facilis modi maxime veniam similique eveniet.
-        </p>
       </div>
     </div>
 
@@ -183,7 +173,10 @@
                 <p>*單位：cm</p>
               </div>
               <div class="col-lg-6 col-12">
-                <img src class="img-fluid" />
+                <img
+                  src="https://images.unsplash.com/photo-1523901839036-a3030662f220?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
+                  class="img-fluid"
+                />
               </div>
             </div>
           </div>
@@ -269,7 +262,10 @@
                 <p>*個人比例條件不同，僅供參考</p>
               </div>
               <div class="col-lg-6 col-12">
-                <img src class="img-fluid" />
+                <img
+                  src="https://images.unsplash.com/photo-1559901274-680c2974f709?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1800&q=80"
+                  class="img-fluid"
+                />
               </div>
             </div>
           </div>
@@ -294,7 +290,7 @@ export default {
   },
   methods: {
     getProduct() {
-      const url = `http://localhost:5000/api/getProducts/${this.productId}`;
+      const url = `api/getProducts/${this.productId}`;
       this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {

@@ -90,9 +90,26 @@ getOrderRoute.route("/createOrder").post((req, res) => {
   });
 });
 
-getOrderRoute.route("/pay").post((req, res) => {
-  const order = req.body;
-  OrdersModel.updateOne({ _id: order._id }, { is_paid: true }, err => {
+// getOrderRoute.route("/pay").post((req, res) => {
+//   const order = req.body;
+//   OrdersModel.updateOne({ _id: order._id }, { is_paid: true }, err => {
+//     if (err) {
+//       return res.status(500).json({
+//         message: "伺服器錯誤",
+//         err
+//       });
+//     }
+//     return res.status(200).json({
+//       message: "付款成功",
+//       success: true,
+//       is_paid: true
+//     });
+//   });
+// });
+
+getOrderRoute.route("/pay/:_id").post((req, res) => {
+  const _id = req.body._id;
+  OrdersModel.updateOne({ _id }, { is_paid: true }, err => {
     if (err) {
       return res.status(500).json({
         message: "伺服器錯誤",

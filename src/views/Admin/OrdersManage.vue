@@ -17,7 +17,7 @@
             v-for="order in orders"
             :key="order._id"
           >
-            <td>{{ order.createDate }}</td>
+            <td>{{ order.createDate.substring(0, 19).replace("T", " ") }}</td>
             <td class="d-sm-table-cell d-none" v-if="order.user">
               {{ order.user.email }}
             </td>
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     getOrder() {
-      const url = "http://localhost:5000/api/getOrders";
+      const url = "/api/getOrders";
       this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {

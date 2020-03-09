@@ -3,7 +3,7 @@
     <Loading :active.sync="isLoading"></Loading>
     <AlertMessage />
     <nav class="navbar navbar-expand-lg navbar-light bg-transparent px-0">
-      <router-link class="navbar-brand logo" to="/">James's Shop</router-link>
+      <router-link class="navbar-brand logo" to="/">Kingsman</router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -64,7 +64,7 @@
           </li>
         </ul>
 
-        <div class="btn-group cart">
+        <div class=" cart">
           <button type="button" class="btn cart-btn" data-toggle="dropdown">
             <i class="fas fa-shopping-cart fa-lg"></i>
             <!-- 計算現在購物車的長度 -->
@@ -110,7 +110,7 @@
           </div>
         </div>
 
-        <div class="btn-group favorite">
+        <div class="favorite">
           <button type="button" class="btn favorite-btn" data-toggle="dropdown">
             <i class="fas fa-heart fa-lg"></i>
             <span class="badge badge-pill badge-danger">{{
@@ -172,51 +172,55 @@
           <li class="px-4">
             <h5 class="footer-title">James's Shop</h5>
             <p class="text-muted">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Est
-              recusandae fugiat, nemo harum nobis laborum expedita vero
-              repellendus consectetur nostrum.
+              Manners Maketh Man
             </p>
           </li>
           <li>
             <h5 class="footer-title">Contact Us</h5>
             <ul>
               <li>
-                <a href="tel:+1234567890" class="text-muted"
-                  >TEL： 12345678910</a
+                <a href="tel:+0913089xxx" class="text-muted"
+                  >TEL： 0913-089-xxx</a
                 >
               </li>
               <li>
-                <a href="mailto:Jamesshop@mail.com" class="text-muted"
-                  >Mail： Jamesshop@mail.com</a
+                <a href="mailto:Kingsman@mail.com" class="text-muted"
+                  >Mail： Kingsman@mail.com</a
                 >
               </li>
-              <li class="text-muted">地址： 地球上的某一個角落</li>
+              <li class="text-muted">地址：Savile Row</li>
             </ul>
           </li>
           <li>
             <h5 class="footer-title">Follow Us</h5>
             <ul>
               <li>
-                <a href="#" class="text-primary">
-                  <span class="fa-stack fa-lg">
+                <span class="fa-stack fa-lg">
+                  <a
+                    href="https://www.facebook.com/profile.php?id=100002492866957"
+                    target="_blank"
+                  >
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-                <a href="#" class="text-primary">
-                  <span class="fa-stack fa-lg">
+                  </a>
+                </span>
+                <span class="fa-stack fa-lg">
+                  <a href="https://github.com/a9261020" target="_blank">
                     <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
+                    <i class="fab fab fa-github fa-stack-1x fa-inverse"></i>
+                  </a>
+                </span>
               </li>
               <li>
-                <a href="#" class="text-primary">
-                  <span class="fa-stack fa-lg">
+                <span class="fa-stack fa-lg">
+                  <a
+                    href="https://www.instagram.com/fish840212/?hl=zh-tw"
+                    target="_blank"
+                  >
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
+                  </a>
+                </span>
                 <a href="#" class="text-primary">
                   <span class="fa-stack fa-lg">
                     <i class="fas fa-circle fa-stack-2x"></i>

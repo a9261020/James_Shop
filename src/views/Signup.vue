@@ -73,8 +73,9 @@ export default {
   },
   methods: {
     signup() {
+      const url = "api/signup";
       axios
-        .post("http://localhost:5000/api/signup", this.user)
+        .post(url, this.user)
         .then(res => {
           if (res) {
             this.$router.push("/login");

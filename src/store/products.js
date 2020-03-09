@@ -8,8 +8,9 @@ export default {
   },
   actions: {
     getProducts(context) {
+      const url = "api/getProducts";
       context.commit("LOADING", true, { root: true });
-      axios.get("http://localhost:5000/api/getProducts").then(res => {
+      axios.get(url).then(res => {
         if (res.data) {
           context.commit("LOADING", false, { root: true });
           context.commit("GETPRODUCTS", res.data);

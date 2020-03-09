@@ -18,7 +18,7 @@
         <div class="sticky-top">
           <ul class="list-group mb-3 category">
             <li
-              class="list-group-item list-group-item-action h6"
+              class="list-group-item"
               v-for="(category, index) in categories"
               :key="index"
               :class="{ active: select == category.title }"
@@ -59,7 +59,7 @@
               :style="{
                 background: `url(${product.imageUrl}) center center no-repeat`,
                 backgroundSize: 'cover',
-                height: '200px'
+                height: '300px'
               }"
             ></div>
             <div class="favorite">
@@ -103,7 +103,10 @@
               >
               <a href="#" @click.prevent="addToCart(product._id)">加到購物車</a>
             </div>
-            <div class="product-soldout" v-if="!product.is_enabled">
+            <div
+              class="product-soldout"
+              v-if="!product.is_enabled || product.num === 0"
+            >
               <button class="btn btn-danger border" disabled>Sold Out</button>
             </div>
           </div>

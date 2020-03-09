@@ -9,6 +9,7 @@ const getCouponsRoute = require("./getCoupons");
 const getOrdersRoute = require("./getOrders");
 const messagesRoute = require("./messages");
 const usersRoute = require("./users");
+const uploadRoute = require("./upload");
 
 router.use("/api/signup", signupRoute);
 router.use("/api/login", loginRoute);
@@ -18,5 +19,6 @@ router.use("/api/getCoupons", getCouponsRoute);
 router.use("/api/getOrders", getOrdersRoute);
 router.use("/api/messages", messagesRoute);
 router.use("/api/users", usersRoute);
+router.use("/api/upload", uploadRoute);
 
 module.exports = router;

@@ -9,7 +9,7 @@ export default {
   },
   actions: {
     getCart(context) {
-      const url = "http://localhost:5000/api/getCarts/";
+      const url = "api/getCarts/";
       axios.get(url).then(res => {
         let nowUserId = sessionStorage.getItem("userId");
         let cart = res.data.data;
@@ -34,7 +34,7 @@ export default {
         product_id: _id,
         qty
       };
-      const url = "http://localhost:5000/api/getCarts/";
+      const url = "api/getCarts/";
       context.commit("LOADING", true, { root: true });
       axios.post(url, cart).then(res => {
         if (res) {
@@ -59,7 +59,7 @@ export default {
       });
     },
     removeCartItem(context, _id) {
-      const url = `http://localhost:5000/api/getCarts/${_id}`;
+      const url = `api/getCarts/${_id}`;
       let nowUserId = sessionStorage.getItem("userId");
       context.commit("LOADING", true, { root: true });
       axios.post(url, { nowUserId }).then(res => {

@@ -5,21 +5,11 @@
         <div class="col-md-7 text-center">
           <div class="box my-4 py-4">
             <h2 class="col mb-4">歡迎來到終極密碼</h2>
-            <img
-              class="img-fluid"
-              src="../../../public/static/bannerImg.jpg"
-              alt="BannerImg"
-            />
-            <div class="col">
-              若在三次內猜中我心裡所想的數字(介於1~100之間)，將會得到精美小禮物。
-            </div>
+            <img class="img-fluid" src="@/assets/static/couponBanner.jpg" alt="BannerImg" />
+            <div class="col">若在三次內猜中我心裡所想的數字(介於1~100之間)，將會得到精美小禮物。</div>
             <div class="w-100"></div>
-            <div class="col">
-              總共有三次機會，越快答對，越快答對禮物越好喔。
-            </div>
-            <button class="btn btn-primary" @click="gameStart" v-if="!inGame">
-              Game Start
-            </button>
+            <div class="col">總共有三次機會，越快答對，越快答對禮物越好喔。</div>
+            <button class="btn btn-primary" @click="gameStart" v-if="!inGame">Game Start</button>
             <!-- game start  -->
             <div
               class="card shadow d-block mx-auto my-2 text-center"
@@ -32,10 +22,7 @@
               <div class="card-body">
                 <ValidationObserver v-slot="{ handleSubmit }">
                   <form @submit.prevent="handleSubmit(submit)">
-                    <ValidationProvider
-                      rules="required|numeric|minmax:1,100"
-                      v-slot="{ errors }"
-                    >
+                    <ValidationProvider rules="required|numeric|minmax:1,100" v-slot="{ errors }">
                       <input
                         class="form-control"
                         :class="{ 'is-invalid': errors[0] }"
@@ -45,9 +32,7 @@
                       <span>{{ errors[0] }}</span>
                       <br />
                     </ValidationProvider>
-                    <button class="btn btn-outline-warning mt-3">
-                      一猜入魂
-                    </button>
+                    <button class="btn btn-outline-warning mt-3">一猜入魂</button>
                   </form>
                 </ValidationObserver>
               </div>
@@ -180,7 +165,7 @@ export default {
 }
 
 .coupongame {
-  background-image: url("../../../public/static/couponBACK.jpg");
+  background-image: url("../../assets/static/couponBack.jpg");
   background-size: cover;
   background-position: 50%;
   position: relative;

@@ -12,4 +12,9 @@ export default {
 
 <style lang="scss">
 @import "./assets/all";
+#app {
+  body {
+    font-family: "Noto Sans TC", sans-serif;
+  }
+}
 </style>

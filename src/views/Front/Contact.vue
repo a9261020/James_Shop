@@ -141,7 +141,7 @@ export default {
   },
   methods: {
     createNewMessageBtn() {
-      const url = "http://localhost:5000/api/messages/addMessage";
+      const url = "api/messages/addMessage";
       this.$store.dispatch("updateLoading", true);
       axios.post(url, this.newMessage).then(res => {
         if (res.data.success) {
@@ -162,7 +162,7 @@ export default {
       this.newMessage.context = "";
     },
     getMessages() {
-      const url = "http://localhost:5000/api/messages/getMessages";
+      const url = "api/messages/getMessages";
       this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         if (res.data.success) {

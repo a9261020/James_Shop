@@ -181,7 +181,7 @@ export default {
   },
   methods: {
     getMessages() {
-      const url = "http://localhost:5000/api/messages/getMessages";
+      const url = "/api/messages/getMessages";
       this.$store.dispatch("updateLoading", true);
       axios.get(url).then(res => {
         this.$store.dispatch("updateLoading", false);
@@ -193,7 +193,7 @@ export default {
       this.tempMessage = Object.assign({}, message);
     },
     replyMessageBtn() {
-      const url = "http://localhost:5000/api/messages/replyMessage";
+      const url = "/api/messages/replyMessage";
       this.$store.dispatch("updateLoading", true);
       axios.post(url, this.tempMessage).then(
         res => {
@@ -220,7 +220,7 @@ export default {
       this.tempMessage = Object.assign({}, message);
     },
     delMessage() {
-      const url = `http://localhost:5000/api/messages/deleteMessage/${this.tempMessage._id}`;
+      const url = `/api/messages/deleteMessage/${this.tempMessage._id}`;
       this.$store.dispatch("updateLoading", true);
       axios.delete(url).then(
         res => {

@@ -192,12 +192,11 @@
           </div>
         </div>
       </div>
+
       <div>
         <h5 class="text-center">訂購資料</h5>
-
         <ValidationObserver v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(createOrder)">
-            <!-- <div class="form-group"> -->
             <ValidationProvider
               name="Email"
               rules="required|email"
@@ -306,7 +305,7 @@
 
     <!-- step3：付款/完成訂單 -->
     <div v-if="step === 3" class="mb-4">
-      <form @submit.prevent="payOrder">
+      <form @submit.prevent="openPayModal">
         <table class="table mb-3">
           <thead>
             <tr>
@@ -359,9 +358,98 @@
         </table>
 
         <div class="text-right" v-if="!order.is_paid">
-          <button class="btn btn-danger">確認付款去</button>
+          <button class="btn btn-danger" @click="openPayModal">付款去</button>
         </div>
       </form>
+    </div>
+
+    <!-- 信用卡付款提示 -->
+    <div class="modal fade" id="payModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0">
+          <div class="modal-header bg-dark">
+            <h5 class="modal-title text-light">
+              確認付款
+            </h5>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="pl-4 col-md-3 right">
+                <ul>
+                  <li>信用卡卡號</li>
+                  <li>信用卡有效月年</li>
+                  <li>信用卡末三碼</li>
+                </ul>
+              </div>
+              <div class="col-md left">
+                <ul>
+                  <li>
+                    <div class="form-group row creditCard">
+                      <input
+                        value="4311"
+                        class="form-control col-md-2"
+                        disabled
+                      />
+                      <input
+                        value="9522"
+                        class="form-control col-md-2"
+                        disabled
+                      />
+                      <input
+                        value="2222"
+                        class="form-control col-md-2"
+                        disabled
+                      />
+                      <input
+                        value="2222"
+                        class="form-control col-md-2"
+                        disabled
+                      />
+                    </div>
+                  </li>
+                  <li>
+                    <div class="form-group row creditCard">
+                      <select class="form-control col-md-2">
+                        <option>3</option>
+                      </select>
+                      <h5 class="pt-1 mr-1 ml-1">
+                        月
+                      </h5>
+                      <select class="form-control col-md-2">
+                        <option>25</option>
+                      </select>
+                      <h5 class="pt-1 mr-1 ml-1">
+                        年
+                      </h5>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="form-group row creditCard">
+                      <input
+                        value="222"
+                        class="form-control col-md-2"
+                        disabled
+                      />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-dismiss="modal"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-primary" @click="payOrder">
+              確認
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -369,6 +457,7 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import $ from "jquery";
 
 export default {
   data() {
@@ -399,7 +488,7 @@ export default {
   methods: {
     addCouponCode() {
       this.$store.dispatch("updateLoading", true);
-      const url = "http://localhost:5000/api/getCoupons/useCoupon";
+      const url = "api/getCoupons/useCoupon";
       axios
         .post(url, { couponCode: this.couponCode, cartId: this.carts._id })
         .then(
@@ -432,7 +521,7 @@ export default {
       this.carts.final_total = this.carts.total;
     },
     createOrder() {
-      const url = "http://localhost:5000/api/getOrders/createOrder";
+      const url = "api/getOrders/createOrder";
       this.form.user.userId = sessionStorage.getItem("userId");
       this.order = this.form;
 
@@ -464,21 +553,22 @@ export default {
         }
       );
     },
+    openPayModal() {
+      $("#payModal").modal("show");
+    },
     payOrder() {
-      const url = "http://localhost:5000/api/getOrders/pay";
-      const order = {
-        _id: this.order._id,
-        orderNo: this.order.orderNo,
-        payment_method: this.order.payment_method
-      };
-      axios.post(url, order).then(
+      const url = `api/getOrders/pay/${this.order._id}`;
+      this.$store.dispatch("updateLoading", true);
+      axios.post(url, { _id: this.order._id }).then(
         res => {
           if (res.data.success) {
-            this.order.is_paid = res.data.is_paid;
+            this.$store.dispatch("updateLoading", false);
             this.$store.dispatch("alertMessageModules/updateMessage", {
               message: res.data.message,
               status: "success"
             });
+            this.order.is_paid = true;
+            $("#payModal").modal("hide");
           }
         },
         err => {
@@ -524,12 +614,14 @@ export default {
     }
   }
 }
+
 .thumbnail {
   margin: auto;
   background-size: cover;
   width: 80px;
   height: 80px;
 }
+
 .stepBtn {
   display: flex;
   justify-content: space-between;
@@ -537,6 +629,25 @@ export default {
     flex-direction: column;
     a:not(:last-child) {
       margin-bottom: 1rem;
+    }
+  }
+}
+
+.modal-body {
+  .right {
+    li {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .left {
+    li {
+      margin-bottom: 1rem;
+    }
+    .creditCard {
+      input {
+        margin-right: 1.25rem;
+      }
     }
   }
 }

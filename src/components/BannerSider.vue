@@ -5,8 +5,8 @@
         <div class="sider sider-1">
           <div class="sider-rect"></div>
           <div class="sider-content">
-            <h3 class="h5 mb-3">James Shop</h3>
-            <p class="mb-0">James Shop 應有盡有，歡迎您來買</p>
+            <h3 class="h5 mb-3">Kingsman</h3>
+            <p class="mb-0">禮儀，成就不凡的人。</p>
           </div>
         </div>
       </swiper-slide>
@@ -15,7 +15,7 @@
           <div class="sider-rect"></div>
           <div class="sider-content">
             <h3 class="h5 mb-3">情人節特賣會</h3>
-            <p class="mb-0">精選情人節禮物，等你來挑</p>
+            <p class="mb-0">西裝是紳士的盔甲</p>
           </div>
         </div>
       </swiper-slide>
@@ -25,6 +25,7 @@
           <div class="sider-content">
             <h3 class="h5 mb-3">2020，新年快樂</h3>
             <p class="mb-0">新的一年，給自己最好的</p>
+            <p class="mb-0">訂做西裝，永遠合身</p>
           </div>
         </div>
       </swiper-slide>
@@ -126,12 +127,12 @@ export default {
 }
 
 .sider-1 {
-  background-image: url("https://images.unsplash.com/photo-1515678916313-2263ebfad5cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
+  background-image: url("../assets/static/banner1.jpg");
 }
 .sider-2 {
-  background-image: url("https://images.unsplash.com/photo-1509803992307-5ed1ac32efda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
+  background-image: url("../assets/static/banner2.jpg");
 }
 .sider-3 {
-  background-image: url("https://images.unsplash.com/photo-1456769965965-63334afeaeb8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
+  background-image: url("../assets/static/banner3.jpg");
 }
 </style>

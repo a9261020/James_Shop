@@ -19,16 +19,13 @@
 
     <div class="bg-light discount">
       <div class="mr-2">
-        <h5>限時 counpon 大放送</h5>
+        <h5>有緣人將會得到折扣。</h5>
         <small class="text-secondary">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis animi
-          molestias aliquam dignissimos minima fugit officiis labore dolore
-          aliquid, vero, soluta est quibusdam. Adipisci voluptas aut unde
-          aliquid numquam vero!
+          A guy is a gentleman by choice
         </small>
       </div>
       <router-link to="/coupongame" class="btn btn-primary"
-        >立即領取</router-link
+        >Be a gentleman</router-link
       >
     </div>
 
@@ -39,7 +36,6 @@
       <div class="col-md-6">
         <div class="mb-4 news-img news-img-1">
           <h3 class="mb-3">MODEL</h3>
-          <h3>I'm Sophia</h3>
         </div>
         <div class="mb-4 news-content">
           <div class="news-border">
@@ -63,7 +59,6 @@
         </div>
         <div class="mb-4 news-img news-img-2">
           <h3 class="mb-3">MODEL</h3>
-          <h3>I'm Jessica</h3>
         </div>
       </div>
     </div>
@@ -127,10 +122,15 @@ export default {
       });
     },
     joinusBtn() {
-      this.$store.dispatch("alertMessageModules/updateMessage", {
-        message: "訂閱成功",
-        status: "success"
-      });
+      this.$store.dispatch("updateLoading", true);
+
+      setTimeout(() => {
+        this.$store.dispatch("updateLoading", false);
+        this.$store.dispatch("alertMessageModules/updateMessage", {
+          message: "訂閱成功",
+          status: "success"
+        });
+      }, 1000);
     }
   }
 };
@@ -204,12 +204,12 @@ export default {
   }
 }
 .news-img-1 {
-  background: url("https://images.unsplash.com/photo-1481824429379-07aa5e5b0739?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=642&q=80")
+  background: url("https://images.unsplash.com/photo-1548454782-15b189d129ab?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80")
     center center no-repeat;
   background-size: cover;
 }
 .news-img-2 {
-  background: url("https://images.unsplash.com/photo-1514315384763-ba401779410f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=630&q=80")
+  background: url("https://images.unsplash.com/photo-1541758996662-2c3ed5f5675c?ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80")
     center center no-repeat;
   background-size: cover;
 }
@@ -231,7 +231,7 @@ export default {
 //joinus
 .joinus {
   padding: 5rem;
-  background: url("https://images.unsplash.com/photo-1519974719765-e6559eac2575?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")
+  background: url("https://images.unsplash.com/photo-1482954363933-4bed6bbea570?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80")
     center center no-repeat;
   background-size: cover;
   background-attachment: fixed;

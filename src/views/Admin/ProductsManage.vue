@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <img src="../../../public/static/adjust.jpg" alt="" /> -->
     <div class="text-right">
       <button class="btn btn-primary" @click="openModal(true)">
         建立新的產品
@@ -14,7 +13,7 @@
             <th class="d-md-table-cell d-none">分類</th>
             <th class="d-lg-table-cell d-none">縮圖</th>
             <th>名稱</th>
-            <th class="d-lg-table-cell d-none">原價</th>
+            <th classs="d-lg-table-cell d-none">原價</th>
             <th class="d-sm-table-cell d-none">售價</th>
             <th class="d-lg-table-cell d-none">是否啟用</th>
             <th></th>
@@ -113,7 +112,7 @@
                     @change.prevent="uploadFile"
                   />
                 </div>
-                <img class="img-fluid" :src="tempProduct.imageUrl" alt />
+                <img class="img-fluid" :src="tempProduct.imageUrl" alt="" />
               </div>
               <div class="col-sm-8">
                 <div class="form-group">
@@ -315,35 +314,30 @@ export default {
       $("#productModal").modal("show");
     },
     updateProduct() {
+      const url = `api/getProducts/${this.tempProduct._id}`;
       if (!this.isNew) {
-        axios
-          .post(
-            `http://localhost:5000/api/getProducts/${this.tempProduct._id}`,
-            this.tempProduct
-          )
-          .then(res => {
-            if (res.data.success) {
-              $("#productModal").modal("hide");
-              this.getProducts();
-              this.$store.dispatch("alertMessageModules/updateMessage", {
-                message: res.data.message,
-                status: "success"
-              });
-            }
-          });
+        axios.post(url, this.tempProduct).then(res => {
+          if (res.data.success) {
+            $("#productModal").modal("hide");
+            this.getProducts();
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+          }
+        });
       } else {
-        axios
-          .post("http://localhost:5000/api/getProducts", this.tempProduct)
-          .then(res => {
-            if (res.data.success) {
-              $("#productModal").modal("hide");
-              this.getProducts();
-              this.$store.dispatch("alertMessageModules/updateMessage", {
-                message: res.data.message,
-                status: "success"
-              });
-            }
-          });
+        const url = "api/getProducts";
+        axios.post(url, this.tempProduct).then(res => {
+          if (res.data.success) {
+            $("#productModal").modal("hide");
+            this.getProducts();
+            this.$store.dispatch("alertMessageModules/updateMessage", {
+              message: res.data.message,
+              status: "success"
+            });
+          }
+        });
       }
     },
     openDelProductModal(item) {
@@ -351,26 +345,28 @@ export default {
       $("#delProductModal").modal("show");
     },
     delProduct() {
-      axios
-        .delete(`http://localhost:5000/api/getProducts/${this.tempProduct._id}`)
-        .then(res => {
-          if (res.data.success) {
-            $("#delProductModal").modal("hide");
-            this.getProducts();
-            this.$store.dispatch("alertMessageModules/updateMessage", {
-              message: res.data.message,
-              status: "danger"
-            });
-          }
-        });
+      const url = `api/getProducts/${this.tempProduct._id}`;
+      axios.delete(url).then(res => {
+        if (res.data.success) {
+          $("#delProductModal").modal("hide");
+          this.getProducts();
+          this.$store.dispatch("alertMessageModules/updateMessage", {
+            message: res.data.message,
+            status: "danger"
+          });
+        }
+      });
     },
     uploadFile() {
-      const url = "http://localhost:5000/api/getProducts/upload";
+      const url = "http://localhost:5000/api/upload";
       const uploadedFile = this.$refs.files.files[0];
       const formData = new FormData();
+      this.status.fileUploading = true;
       formData.append("file-to-upload", uploadedFile);
       axios.post(url, formData).then(res => {
         console.log(res);
+        this.status.fileUploading = false;
+        this.tempProduct.imageUrl = res.data.imagePath;
       });
     }
   },

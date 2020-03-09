@@ -95,7 +95,8 @@ export default {
       this.isConnected = false;
     },
     login() {
-      axios.post("http://localhost:5000/api/login", this.user).then(
+      const url = "api/login";
+      axios.post(url, this.user).then(
         res => {
           if (res.status === 200) {
             const user = res.data.user;
@@ -120,9 +121,10 @@ export default {
       );
     },
     loginByFB() {
+      const url = "api/login/loginByFB";
       this.$store.dispatch("updateLoading", true);
       axios
-        .post("http://localhost:5000/api/login/loginByFB", this.user)
+        .post(url, this.user)
         .then(res => {
           if (res.data.success) {
             this.$store.dispatch("updateLoading", false);
