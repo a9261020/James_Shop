@@ -15,8 +15,7 @@
               query: { category: product.category }
             }"
             class="text-primary"
-            >{{ product.category }}</router-link
-          >
+          >{{ product.category }}</router-link>
         </li>
         <li class="breadcrumb-item active">{{ product.title }}</li>
       </ol>
@@ -26,20 +25,14 @@
       <div class="col-md-4 mb-3">
         <div class="sticky-top clearfix" style="top: 10px">
           <h1 class="h3">{{ product.title }}</h1>
-          <div
-            class="d-flex align-items-baseline"
-            v-if="product.origin_price !== product.price"
-          >
+          <div class="d-flex align-items-baseline" v-if="product.origin_price !== product.price">
             <del class="text-muted">售價：{{ product.origin_price }}</del>
             <div class="ml-auto mb-0 h5 text-danger">
               <small>特價：</small>
               <strong>{{ product.price }}</strong>
             </div>
           </div>
-          <div
-            class="d-flex align-items-baseline"
-            v-if="product.origin_price == product.price"
-          >
+          <div class="d-flex align-items-baseline" v-if="product.origin_price == product.price">
             <div class="ml-auto mb-0 h5">
               <small>售價：</small>
               <strong>{{ product.price }}</strong>
@@ -68,42 +61,35 @@
               </button>
             </li>
             <li>
-              <a
-                href="#"
+              <button
                 class="btn btn-link p-0"
                 :class="{ 'd-none': isFavorite }"
                 @click.prevent="addFavorite(product)"
               >
                 <i class="fas fa-heart"></i> 收藏商品
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
                 class="btn btn-link p-0"
                 :class="{ 'd-none': !isFavorite }"
                 @click.prevent="removeFavorite(product, false)"
               >
                 <i class="fas fa-heart-broken"></i> 取消收藏
-              </a>
+              </button>
             </li>
           </ul>
           <hr />
 
           <div class="input-group addcart">
-            <select class="form-control" v-model="qty">
-              <option value="0" disabled selected>請選擇數量</option>
-              <option :value="num" v-for="num in 15" :key="num"
-                >{{ num }} {{ product.unit }}</option
-              >
-            </select>
-            <button class="btn btn-primary" @click="addToCart(qty)">
+            <button class="btn btn-primary" @click="changeQtyBtn(-1)">-</button>
+            <input class="form-control text-center" type="number" v-model.number="qty" />
+            <button class="btn btn-primary" @click="changeQtyBtn(1)">+</button>
+            <button class="btn btn-primary ml-2" @click="addToCart(qty)">
               <i class="fas fa-plus"></i>
               加入購物車
             </button>
           </div>
 
-          <router-link to="/coupongame" class="badge badge-warning float-right"
-            >折價卷適用</router-link
-          >
+          <router-link to="/coupongame" class="badge badge-warning float-right">折價卷適用</router-link>
         </div>
       </div>
       <div class="col-md-8 product-content">
@@ -125,12 +111,7 @@
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header pb-0 border-0">
-            <button
-              type="button"
-              class="close p-2"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close p-2" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -196,12 +177,7 @@
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header pb-0 border-0">
-            <button
-              type="button"
-              class="close p-2"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close p-2" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -322,11 +298,18 @@ export default {
       });
       this.isFavorite = false;
     },
+    changeQtyBtn(symbol) {
+      if (this.qty === 0 && symbol === -1) {
+        this.qty = 0;
+      } else {
+        this.qty += symbol;
+      }
+    },
     addToCart(qty) {
       const userId = sessionStorage.getItem("userId");
       if (qty === 0) {
         this.$store.dispatch("alertMessageModules/updateMessage", {
-          message: "請選擇數量",
+          message: "請輸入購買數量",
           status: "danger"
         });
       } else {
@@ -358,6 +341,17 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/_custom.scss";
 
+ul {
+  button {
+    color: $primary-color;
+
+    &:hover {
+      text-decoration: none;
+      color: $secondary-color;
+    }
+  }
+}
+
 .product-summary {
   display: flex;
   justify-content: space-around;
@@ -379,9 +373,7 @@ export default {
 .addcart {
   display: flex;
   margin-bottom: 0.5rem;
-  button {
-    margin-left: 0.5rem;
-  }
+
   @media (max-width: 991px) {
     display: block;
     select {
@@ -414,5 +406,13 @@ export default {
   p {
     font-size: 1.25rem;
   }
+}
+
+// 移除 input type="number" 時旁邊的小箭頭
+// https://blog.csdn.net/kongjiea/article/details/46989785
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
 }
 </style>

@@ -16,14 +16,8 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div
-        class="collapse navbar-collapse toggle-menu"
-        id="navbarSupportedContent"
-      >
+      <div class="collapse navbar-collapse toggle-menu" id="navbarSupportedContent">
         <ul class="navbar-nav align-items-center w-100">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/">Home</router-link>
-          </li>
           <li class="nav-item">
             <router-link
               class="nav-link"
@@ -31,8 +25,7 @@
               :class="{
                 active: $route.name === 'ProductsList' && 'router-link-active'
               }"
-              >Products</router-link
-            >
+            >Products</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/coupongame">Coupons</router-link>
@@ -49,47 +42,41 @@
               <i class="fas fa-user-circle fa-lg"></i>
             </router-link>
           </li>
-          <li class="nav-item pt-1 ml-lg-auto mr-1" v-if="isLogin">
-            {{ getUser.name }}
-          </li>
+          <li class="nav-item pt-1 ml-lg-auto mr-1" v-if="isLogin">{{ getUser.name }}</li>
           <li class="nav-item pt-1" v-if="isLogin && getUser.isAdmin">
-            <router-link class="nav-link" to="/dashboard">
-              Dashboard
-            </router-link>
+            <router-link class="nav-link" to="/dashboard">Dashboard</router-link>
           </li>
           <li class="nav-item pt-1" @click="logout" v-if="isLogin">
             <router-link class="nav-link" to="/">
-              <i class="fas fa-sign-out-alt fa-lg "></i>
+              <i class="fas fa-sign-out-alt fa-lg"></i>
             </router-link>
           </li>
         </ul>
 
-        <div class=" cart">
+        <div class="cart">
           <button type="button" class="btn cart-btn" data-toggle="dropdown">
             <i class="fas fa-shopping-cart fa-lg"></i>
             <!-- 計算現在購物車的長度 -->
             <span class="badge badge-pill badge-danger">{{ cartsLength }}</span>
           </button>
 
-          <div
-            class="dropdown-menu dropdown-menu-right"
-            :class="{ show: isCartShow }"
-          >
+          <div class="dropdown-menu dropdown-menu-right" :class="{ show: isCartShow }">
             <div class="p-2 px-sm-3">
               <h5 class="text-center">購物車清單</h5>
               <table class="table mb-2">
                 <tbody>
                   <tr v-for="cart in carts.carts" :key="cart._id">
                     <td class="px-1">
-                      <a
-                        href="#"
-                        class="text-danger"
-                        @click="removeCartItem(cart.id)"
-                      >
+                      <a href="#" class="text-danger" @click="removeCartItem(cart.id)">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
-                    <td class="px-1">{{ cart.product.title }}</td>
+                    <td class="px-1 cartTitle">
+                      <router-link
+                        class="titleText"
+                        :to="`/productslist/${cart.product._id}`"
+                      >{{ cart.product.title }}</router-link>
+                    </td>
                     <td class="px-1">{{ cart.qty }} {{ cart.product.unit }}</td>
                     <td class="text-right px-1">${{ cart.total }}</td>
                   </tr>
@@ -113,20 +100,18 @@
         <div class="favorite">
           <button type="button" class="btn favorite-btn" data-toggle="dropdown">
             <i class="fas fa-heart fa-lg"></i>
-            <span class="badge badge-pill badge-danger">{{
+            <span class="badge badge-pill badge-danger">
+              {{
               favoritesLength
-            }}</span>
+              }}
+            </span>
           </button>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="pt-2 px-3">
               <h5 class="text-center">我的最愛</h5>
               <table class="table mb-2">
                 <tbody>
-                  <tr
-                    class="favorite-list"
-                    v-for="favorite in favorites"
-                    :key="favorite._id"
-                  >
+                  <tr class="favorite-list" v-for="favorite in favorites" :key="favorite._id">
                     <td class="py-2" width="30">
                       <a
                         href="#"
@@ -140,8 +125,7 @@
                       <router-link
                         :to="`/productslist/${favorite._id}`"
                         class="d-block"
-                        >{{ favorite.title }}</router-link
-                      >
+                      >{{ favorite.title }}</router-link>
                     </td>
                   </tr>
                   <tr :class="{ 'd-none': favorites.length }">
@@ -154,9 +138,7 @@
                 :class="{ 'd-none': !favorites.length }"
                 data-toggle="modal"
                 data-target="#delFavoriteModal"
-              >
-                刪除全部
-              </button>
+              >刪除全部</button>
             </div>
           </div>
         </div>
@@ -171,22 +153,16 @@
         <ul class="d-md-flex footer">
           <li class="px-4">
             <h5 class="footer-title">James's Shop</h5>
-            <p class="text-muted">
-              Manners Maketh Man
-            </p>
+            <p class="text-muted">Manners Maketh Man</p>
           </li>
           <li>
             <h5 class="footer-title">Contact Us</h5>
             <ul>
               <li>
-                <a href="tel:+0913089xxx" class="text-muted"
-                  >TEL： 0913-089-xxx</a
-                >
+                <a href="tel:+0913089xxx" class="text-muted">TEL： 0913-089-xxx</a>
               </li>
               <li>
-                <a href="mailto:Kingsman@mail.com" class="text-muted"
-                  >Mail： Kingsman@mail.com</a
-                >
+                <a href="mailto:Kingsman@mail.com" class="text-muted">Mail： Kingsman@mail.com</a>
               </li>
               <li class="text-muted">地址：Savile Row</li>
             </ul>
@@ -196,10 +172,7 @@
             <ul>
               <li>
                 <span class="fa-stack fa-lg">
-                  <a
-                    href="https://www.facebook.com/profile.php?id=100002492866957"
-                    target="_blank"
-                  >
+                  <a href="https://www.facebook.com/profile.php?id=100002492866957" target="_blank">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
                   </a>
@@ -213,10 +186,7 @@
               </li>
               <li>
                 <span class="fa-stack fa-lg">
-                  <a
-                    href="https://www.instagram.com/fish840212/?hl=zh-tw"
-                    target="_blank"
-                  >
+                  <a href="https://www.instagram.com/fish840212/?hl=zh-tw" target="_blank">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
                   </a>
@@ -247,15 +217,8 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header bg-danger text-light">
-              <h5 class="modal-title" id="delFavoriteModalLabel">
-                刪除 全部我的最愛
-              </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <h5 class="modal-title" id="delFavoriteModalLabel">刪除 全部我的最愛</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -265,21 +228,13 @@
               (刪除後將無法回復)
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                data-dismiss="modal"
-              >
-                取消
-              </button>
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
               <button
                 type="button"
                 class="btn btn-outline-danger"
                 data-dismiss="modal"
                 @click.prevent="removeFavorite('', true)"
-              >
-                確認刪除
-              </button>
+              >確認刪除</button>
             </div>
           </div>
         </div>
@@ -356,6 +311,16 @@ export default {
 .favorite {
   float: right;
   margin-left: 0.25rem;
+}
+
+.cartTitle {
+  .titleText {
+    color: $primary-color;
+  }
+  :hover {
+    text-decoration: none;
+    color: $secondary-color;
+  }
 }
 
 .cart-btn,

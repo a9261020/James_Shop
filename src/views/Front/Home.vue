@@ -20,13 +20,9 @@
     <div class="bg-light discount">
       <div class="mr-2">
         <h5>有緣人將會得到折扣。</h5>
-        <small class="text-secondary">
-          A guy is a gentleman by choice
-        </small>
+        <small class="text-secondary">A guy is a gentleman by choice</small>
       </div>
-      <router-link to="/coupongame" class="btn btn-primary"
-        >Be a gentleman</router-link
-      >
+      <router-link to="/coupongame" class="btn btn-primary">Be a gentleman</router-link>
     </div>
 
     <CardSider />
@@ -41,9 +37,7 @@
           <div class="news-border">
             <h3 class="mb-3">Hot Sale</h3>
             <p>Popular Products</p>
-            <router-link to="/productslist" class="btn btn-primary"
-              >Go Shop</router-link
-            >
+            <router-link to="/productslist" class="btn btn-primary">Go Shop</router-link>
           </div>
         </div>
       </div>
@@ -52,9 +46,7 @@
           <div class="news-border">
             <h3 class="mb-3">New Arrival</h3>
             <p>Summer Clothing</p>
-            <router-link to="/productslist" class="btn btn-primary"
-              >Shop Now</router-link
-            >
+            <router-link to="/productslist" class="btn btn-primary">Shop Now</router-link>
           </div>
         </div>
         <div class="mb-4 news-img news-img-2">
@@ -69,11 +61,7 @@
         <h3 class="mb-4">Join our mailing list for updates</h3>
         <ValidationObserver v-slot="{ handleSubmit }">
           <form @submit.prevent="handleSubmit(joinusBtn)">
-            <ValidationProvider
-              name="email"
-              rules="required|email"
-              v-slot="{ errors }"
-            >
+            <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
               <input
                 :class="{ 'is-invalid': errors[0] }"
                 class="form-control"
@@ -81,9 +69,7 @@
                 v-model="email"
               />
               <span>{{ errors[0] }}</span>
-              <button class="form-control btn btn-primary mt-3">
-                Subscribe Now
-              </button>
+              <button class="form-control btn btn-primary mt-3">Subscribe Now</button>
             </ValidationProvider>
           </form>
         </ValidationObserver>

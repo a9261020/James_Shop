@@ -41,15 +41,19 @@
             </li>
           </ul>
         </div>
-        <div class="col-md-3 col-12 border-left text-center pt-4">
+        <div class="col-md-3 col-12 detailsBtn text-center pt-4">
           <button
-            class="btn btn-info mr-2"
+            class="btn btn-info mr-4"
             data-toggle="collapse"
             :data-target="`#collapse-${order.orderNo}`"
           >
             查看明細
           </button>
-          <button class="btn btn-warning" @click="openPayModal(order._id)">
+          <button
+            class="btn btn-warning"
+            @click="openPayModal(order._id)"
+            v-if="!order.is_paid"
+          >
             前往付款
           </button>
         </div>
@@ -104,9 +108,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark">
-            <h5 class="modal-title text-light">
-              確認付款
-            </h5>
+            <h5 class="modal-title text-light">確認付款</h5>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -148,15 +150,11 @@
                       <select class="form-control col-md-2">
                         <option>3</option>
                       </select>
-                      <h5 class="pt-1 mr-1 ml-1">
-                        月
-                      </h5>
+                      <h5 class="pt-1 mr-1 ml-1">月</h5>
                       <select class="form-control col-md-2">
                         <option>25</option>
                       </select>
-                      <h5 class="pt-1 mr-1 ml-1">
-                        年
-                      </h5>
+                      <h5 class="pt-1 mr-1 ml-1">年</h5>
                     </div>
                   </li>
                   <li>
@@ -283,6 +281,16 @@ export default {
         margin-right: 1.25rem;
       }
     }
+  }
+}
+
+.detailsBtn {
+  border-left: 1px rgba(179, 165, 165, 0.5) solid;
+  @media (max-width: 480px) {
+    padding-left: 10px;
+    border-top: 1px rgba(179, 165, 165, 0.5) solid;
+    border-left: none;
+    margin-bottom: 1.25rem;
   }
 }
 </style>

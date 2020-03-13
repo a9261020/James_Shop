@@ -7,15 +7,21 @@
         </li>
         <li class="breadcrumb-item active">產品列表</li>
         <li class="breadcrumb-item active">{{ select }}</li>
-        <li class="breadcrumb-item active" v-if="filterText">
-          搜尋 {{ filterText }}
-        </li>
+        <li class="breadcrumb-item active" v-if="filterText">搜尋 {{ filterText }}</li>
       </ol>
     </nav>
 
     <div class="row mb-2">
       <div class="col-lg-2 col-md-3 mb-3">
         <div class="sticky-top">
+          <form class="input-group mb-3" @submit.prevent="search">
+            <input type="search" class="form-control" placeholder="search" v-model="searchText" />
+            <div class="input-group-append">
+              <button class="input-group-text bg-light">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
           <ul class="list-group mb-3 category">
             <li
               class="list-group-item"
@@ -28,26 +34,14 @@
               {{ category.title }}
             </li>
           </ul>
-          <form class="input-group mb-3" @submit.prevent="search">
-            <input
-              type="search"
-              class="form-control"
-              placeholder="search"
-              v-model="searchText"
-            />
-            <div class="input-group-append">
-              <button class="input-group-text bg-light">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-          </form>
         </div>
       </div>
 
       <div class="col-lg-10 col-md-9">
-        <div class="mb-2 text-left text-muted" v-if="filterText">
-          we found {{ filterProducts.length }} result for "{{ filterText }}"
-        </div>
+        <div
+          class="mb-2 text-left text-muted"
+          v-if="filterText"
+        >we found {{ filterProducts.length }} result for "{{ filterText }}"</div>
 
         <div class="card-columns">
           <div
@@ -70,11 +64,7 @@
               >
                 <i class="fas fa-heart fa-lg"></i>
               </a>
-              <a
-                class="text-danger"
-                v-else
-                @click.prevent="addFavorite(product)"
-              >
+              <a class="text-danger" v-else @click.prevent="addFavorite(product)">
                 <i class="far fa-heart fa-lg"></i>
               </a>
             </div>
@@ -92,21 +82,14 @@
                   :class="{
                     'text-danger': product.origin_price !== product.price
                   }"
-                >
-                  NT {{ product.price }}
-                </p>
+                >NT {{ product.price }}</p>
               </div>
             </div>
             <div class="product-more">
-              <router-link :to="`/productslist/${product._id}`"
-                >查看更多</router-link
-              >
+              <router-link :to="`/productslist/${product._id}`">查看更多</router-link>
               <a href="#" @click.prevent="addToCart(product._id)">加到購物車</a>
             </div>
-            <div
-              class="product-soldout"
-              v-if="!product.is_enabled || product.num === 0"
-            >
+            <div class="product-soldout" v-if="!product.is_enabled || product.num === 0">
               <button class="btn btn-danger border" disabled>Sold Out</button>
             </div>
           </div>
@@ -235,6 +218,7 @@ export default {
     }
   }
 }
+
 .product-soldout {
   position: absolute;
   top: 0;

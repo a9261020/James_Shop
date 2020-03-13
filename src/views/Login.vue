@@ -29,21 +29,23 @@
         <li class="h3 text-center">
           使用臉書登入
           <facebook-login
-            class="btn btn-lg facebookBtn"
             appId="2520743858163811"
             @login="onLogin"
             @logout="onLogout"
             @sdk-loaded="sdkLoaded"
-          >
-          </facebook-login>
+          ></facebook-login>
+        </li>
+        <li class="mb-3">
+          <h5>
+            <router-link class="text-muted" to="/signup">立即註冊</router-link>
+          </h5>
         </li>
         <li>
-          <router-link class="text-muted" to="/signup">尚未註冊</router-link>
-        </li>
-        <li>
-          <router-link class="text-muted" to="/"
-            >＜－ 回到 James Shop 購物去</router-link
-          >
+          <h5>
+            <router-link class="text-muted" to="/"
+              >＜－ 回到 James Shop 購物去</router-link
+            >
+          </h5>
         </li>
       </ul>
     </form>
